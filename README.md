@@ -172,7 +172,7 @@ Media model
 
 ### Trello/Kanban
 
-[Link to your trello board](https://trello.com/b/iloDccrZ/backlog-quest) 
+[Link to your trello board](https://trello.com/b/xAQKJWNG/mediabox) 
 
 ### Git
 
