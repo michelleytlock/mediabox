@@ -80,6 +80,8 @@ MediaBox is an app that asks users what they think about movies and tv shows the
 
 - Profile
 
+- SearchResults
+
 
 ## Services
 
@@ -96,7 +98,9 @@ MediaBox is an app that asks users what they think about movies and tv shows the
   - media.filter
   
 - External API
-  - API
+  - api.random()
+  - api.recommended()
+  - api.filter(search)
 
 
 <br>
@@ -114,45 +118,32 @@ User model
   username: {type: String, required: true, unique: true},
   email: {type: String, required: true, unique: true},
   password: {type: String, required: true},
-  list: [{type: Schema.Types.ObjectId,ref:'Media', listType: String, rating: Number}]
+  list: [{mediaId: {type: Schema.Types.ObjectId,ref:'Media'}, listType: String, rating: Number}]
 }
 ```
 
 
 
-Movie model
+Media model
 
 ```javascript
  {
+   apiId: {type: Number, required: true},
    title: {type: String, required: true},
-   tagline: {type: String, required: true},
+   tagline: {type: String},
    genres: [{type: String, required: true}],
    image: {type: String, required: true},
    description: {type: String, required: true},
-   releaseDate: {type: Date, required: true},
-   runtime: {type: Number, required: true},
-   director: {type: String, required: true}
-   cast: [{type: String, required: true}]
- }
-```
-
-
-
-TV Show model
-
-```javascript
- {
-   title: {type: String, required: true},
-   networks: [{type: String, required: true}],
-   genres: [{type: String, required: true}],
-   image: {type: String, required: true},
-   description: {type: String, required: true},
+   releaseDate: {type: Date},
+   runtime: {type: Number},
+   director: {type: String},
+   cast: [{type: String, required: true}],
+   networks: [{type: String}],
    firstAirDate: {type: Date, required: true},
    lastAirDate: {type: Date, required: true},
    numberOfEps: {type: Number, required: true},
    numberOfSeasons: {type: Number, required: true},
    createdBy: {type: String, required: true},
-   cast: [{type: String, required: true}]
  }
 ```
 
@@ -168,12 +159,10 @@ TV Show model
 | POST        | `/auth/signup`                | {name, email, password}      | 201            | 404          | Checks if fields not empty (422) and user not exists (409), then create user with encrypted password, and store user in session |
 | POST        | `/auth/login`                 | {username, password}         | 200            | 401          | Checks if fields not empty (422), if user exists (404), and if password matches (404), then stores user in session    |
 | POST        | `/auth/logout`                | (empty)                      | 204            | 400          | Logs out the user                                            |
-| GET        | `/mediabox/movies`                 |   | 201               | 400          | Show movies                                               |
-| GET         | `/mediabox/tvshows`             |                              |   201             | 400          | Show tv shows                                           |
-| GET         | `/mediabox/movies/:id`                        |                              | 201            | 400          | Show specific movie                               |
-| GET         | `/mediabox/tvshows/:id`                 |                              | 201            | 400          | Show specific tv show                                                 |
-| POST      | `/mediabox/movies/search`                 |  {search, trending, recommended, genre}                            | 201            | 400          | Filter                                               |
-| POST      | `/mediabox/tvshows/search`                 |  {search, trending, recommended, genre}                            | 201            | 400          | Filter                                               |
+| POST        |`/mediabox/create`              | {id}     | 200| 400| Checks if media is in database and adds it if not there
+| GET        | `/mediabox/watchlist`                 |   | 201               | 400          | Show media in watchlist                                              |
+| POST      | `/mediabox/media/search`                 |  {search, trending, recommended, genre}                            | 201            | 400          | Filter                                               |     
+| GET        |`/mediabox/update/:id`              |      | 200| 400| Updates media in database                                      
 
 
 <br>
