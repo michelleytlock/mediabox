@@ -13,8 +13,9 @@ import PrivateRoute from "./components/PrivateRoute";
 import LandingPage from "./components/LandingPage";
 import SignupPage from "./components/SignupPage";
 import LoginPage from "./components/LoginPage";
-import Home from "./components/Home";
+import Intro from "./components/Intro";
 import Profile from "./components/Profile";
+import Watchlist from "./components/Watchlist";
 
 class App extends Component {
 
@@ -68,12 +69,20 @@ class App extends Component {
 
           {/* App Routes */}
           <PrivateRoute
+            path="/home/movies"
+            component={Intro}
+          />
+          {/* <PrivateRoute
+            path="/home/tvshows"
+            component={Intro}
+          /> */}
+          <PrivateRoute
             path="/profile"
             component={Profile}
           />
           <PrivateRoute
-            path="/home/movies"
-            component={Home}
+            path="/watchlist"
+            component={Watchlist}
           />
         </Switch>
       </div>

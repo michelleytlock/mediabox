@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import config from "../config";
 import axios from "axios";
 
-import Onboarding from "./Onboarding";
 import Filter from "./Filter";
-import Rater from "./Rater";
 import Navbar from "./Navbar";
+import HomeRater from "./HomeRater";
 
 class Home extends Component {
   state = {
@@ -13,124 +12,95 @@ class Home extends Component {
     randomMedia: "",
     randomMediaType: "",
     list: [],
+    mediaPage: 'movies'
   };
 
-  componentDidMount() {
-    this.getRandomMedia();
-  }
+  // componentDidMount() {
+  //   axios
+  //     .get(`${config.API_URL}/user`, { withCredentials: true })
+  //     .then((res) => {
+  //       this.setState({
+  //         list: res.data.list
+  //       }, () => {
+  //         this.getRandomMedia();
+  //       })
+  //     })
+  // }
 
-  getRandomMedia = () => {
-    let random = Math.floor(Math.random() * 2);
-    let mediaType;
+  // getRandomMovie = () => {
+  //   console.log('get random media console log')
+  //   let random = Math.floor(Math.random() * 2);
+  //   let mediaType;
 
-    random === 1 ? (mediaType = "movie") : (mediaType = "tv");
+  //   random === 1 ? (mediaType = "movie") : (mediaType = "tv");
 
-    axios
-      .get(
-        `https://api.themoviedb.org/3/${mediaType}/popular?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`
-      )
-      .then((res) => {
-        let randomNum = Math.floor(Math.random() * res.data.results.length);
+  //   axios
+  //     .get(
+  //       `https://api.themoviedb.org/3/${mediaType}/popular?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`
+  //     )
+  //     .then((res) => {
+  //       let results = res.data.results.filter((media) => {
+  //         return media.poster_path
+  //       })
+
+  //       let randomNum = Math.floor(Math.random() * results.length);
         
-        // console.log(randomNum);
-        // console.log(res.data.results);
+  //       this.setState({
+  //         randomMedia: results[randomNum],
+  //         randomMediaType: mediaType,
+  //       });
+  //     });
+  // };
 
-        console.log(this.state.list)
-        
-        //FIX DUPLICATE MEDIAS
-
-        for (let i = 0; i < res.data.results.length; i++) {
-          if (this.state.list && this.state.list.some(
-            e => { return e.apiId === res.data.results[i].id }
-          )) {
-            randomNum = i;
-          }
-        }
-
-        this.setState({
-          randomMedia: res.data.results[randomNum],
-          randomMediaType: mediaType,
-        });
-      });
-  };
-
-  handleRate = (e) => {
-    let rating = e.target.innerHTML;
-    console.log(this.state.randomMedia);
-    console.log(this.state.randomMediaType);
+  handleSave = () => {
     axios
       .post(
         `${config.API_URL}/create`,
         {
           mediaType: this.state.randomMediaType,
           apiId: this.state.randomMedia.id,
-          listType: "rated",
-          rating,
+          listType: "watchlist",
           description: this.state.randomMedia.overview,
           image: this.state.randomMedia.poster_path,
-          title:
-            this.state.randomMediaType == "movie"
-              ? this.state.randomMedia.title
-              : this.state.randomMedia.name,
+          title: this.state.randomMediaType === "movie"
+          ? this.state.randomMedia.title
+          : this.state.randomMedia.name,
         },
         { withCredentials: true }
       )
       .then((response) => {
+        console.log(response.data.list)
         this.setState({
-          list: response.list,
+          list: response.data.list,
           randomMedia: "",
           randomMediaType: "",
+        }, () => {
+          this.getRandomMedia();
         });
-        this.getRandomMedia();
-      })
-      .catch((err) => {
-        console.log("create media err" + err);
       });
-  };
+  }
 
-  handleSkip = () => {
-    axios
-      .post(
-        `${config.API_URL}/create`,
-        {
-          mediaType: this.state.randomMediaType,
-          apiId: this.state.randomMedia.id,
-          listType: "skipped",
-          description: this.state.randomMedia.overview,
-          image: this.state.randomMedia.poster_path,
-          title: this.state.randomMedia.title,
-        },
-        { withCredentials: true }
-      )
-      .then(() => {
-        this.getRandomMedia();
-      });
-  };
+  handleToggleMovie = () => {
+    this.setState({
+      mediaPage: "tvshows"
+    })
+  }
+
+  handleToggleTV = () => {
+    this.setState({
+      mediaPage: "movies"
+    })
+  }
 
   render() {
-    const { list } = this.state.user;
-    let rated = list.filter((media) => {
-      return (media.listType = "rated");
-    });
-
     return (
       <>
-        {rated.length < 10 ? (
-          <Onboarding
-            ratedList={rated}
-            random={this.state.randomMedia}
-            onRate={this.handleRate}
-            onSkip={this.handleSkip}
-          />
-        ) : (
-          <div>
-            <Filter />
-            <Rater />
-            <Navbar />
-          </div>
-        )}
+        <Filter onMovieChange={this.handleToggleMovie} onTVChange={this.handleToggleTV} />
+        <HomeRater onRate={this.props.onRate} onSkip={this.props.onSkip} onSave={this.props.onSave} />
+        <Navbar />
       </>
     );
   }
 }
+
 export default Home;

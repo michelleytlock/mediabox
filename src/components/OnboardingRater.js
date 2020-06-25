@@ -2,7 +2,7 @@ import React from "react";
 
 let photoPath = 'https://image.tmdb.org/t/p/w500/'
 
-export default function Rater(props) {
+export default function OnboardingRater(props) {
   return (
     <>
       <img src={photoPath + props.random.poster_path} alt={props.random.title} />

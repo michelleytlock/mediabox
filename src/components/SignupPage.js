@@ -7,8 +7,8 @@ export default function SignupPage(props) {
         <h1 className="title">Sign Up</h1>
         <form onSubmit={props.onSignup}>
           {/* USERNAME */}
-          <div class="field">
-            <label class="label" htmlFor="username">
+          <div className="field">
+            <label className="label" htmlFor="username">
               Username
             </label>
             <input
@@ -48,7 +48,7 @@ export default function SignupPage(props) {
           {/* BUTTONS */}
           <div className="field">
             <div className="control">
-              <button type="submit" class="button is-link">Submit</button>
+              <button type="submit" className="button is-link">Submit</button>
             </div>
           </div>
 
