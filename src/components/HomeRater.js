@@ -3,9 +3,13 @@ import React from "react";
 let photoPath = 'https://image.tmdb.org/t/p/w500/'
 
 export default function HomeRater(props) {
+  let imageSrc = photoPath + props.random.poster_path;
+
+  // {props.random.poster_path ? imageSrc : ''}
+
   return (
     <>
-      {/* <img src={photoPath + props.random.poster_path} alt={props.random.title} /> */}
+      <img src={props.random.poster_path ? imageSrc : ''} alt={props.random.title} />
       
       <div className="columns is-mobile">
         <div className="column">

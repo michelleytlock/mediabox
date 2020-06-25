@@ -1,27 +1,50 @@
-import React from "react";
+import React, { Component } from "react";
+import config from "../config";
+import axios from "axios";
 
 import Navbar from "./Navbar";
 import Filter from "./Filter";
 
 let photoPath = 'https://image.tmdb.org/t/p/w500/'
 
-export default function Watchlist(props) {
-  //unable to get the list from the session
-  let watchlist = props.loggedInUser.list.filter((media) => {
-    return media.listType === 'watchlist'
-  })
-  console.log(props.loggedInUser.list)
-  console.log(watchlist)
+class Watchlist extends Component {
+  state = {
+    user: this.props.loggedInUser,
+    list: [],
+  }
 
-  return (
-    <>
-      <Filter />
-      <div>
-        {watchlist.map((media) => {
-          return <div><img src={photoPath + media.poster_path} alt={media.title} /><h4>{media.title}</h4></div>
-        })}
-      </div>
-      <Navbar />
-    </>
-  );
+  componentDidMount() {    
+    axios
+      .get(`${config.API_URL}/userData`, { withCredentials: true })
+      .then((res) => {
+        this.setState({
+          list: res.data.list
+        })
+      })
+  }
+
+  render() {
+
+    console.log(this.state.list)
+    
+    let watchlist = this.state.list.filter((media) => {
+      return media.listType === 'watchlist'
+    })
+
+    console.log(watchlist)
+  
+    return (
+      <>
+        <Filter />
+        <div class="list">
+          {watchlist.map((media, index) => {
+            return <div key={index} className="list-item"><img  src={photoPath + media.mediaId.image} alt={media.mediaId.title} /><h4>{media.mediaId.title}</h4></div>
+          })}
+        </div>
+        <Navbar />
+      </>
+    );
+  }
 }
+
+export default Watchlist;

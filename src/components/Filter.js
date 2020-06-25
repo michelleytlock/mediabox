@@ -10,8 +10,8 @@ export default function Filter(props) {
   return (
     <div className="main-filter">
       <div className="media-filter">
-        <button onClick={props.onMovieChange}><h5 className="title is-5">MOVIES</h5></button>
-        <button onClick={props.onTVChange}><h5 className="title is-5">TV SHOWS</h5></button>
+        <button className="button is-white" onClick={props.onMovieChange}><h5 className="title is-5">MOVIES</h5></button>
+        <button className="button is-white" onClick={props.onTVChange}><h5 className="title is-5">TV SHOWS</h5></button>
       </div>
       <div className="search-filter">
         <input

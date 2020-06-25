@@ -42,7 +42,7 @@ class PrivateRoute extends Component {
       return null
       //loading
     }
-
+    console.log(this.state.loggedInUser)
     let MyComponent = this.props.component
     return (
       <Route

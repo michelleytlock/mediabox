@@ -103,7 +103,7 @@ class Intro extends Component {
         });
 
         let rated = this.state.list.filter((media) => {
-          return media.listType = "rated";
+          return media.listType === "rated";
         });
 
         if (rated.length < 10) {
@@ -141,7 +141,7 @@ class Intro extends Component {
         });
 
         let rated = this.state.list.filter((media) => {
-          return media.listType = "rated";
+          return media.listType === "rated";
         });
 
         if (rated.length < 10) {

@@ -6,7 +6,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="navbar is-primary is-fixed-bottom myNav">
-            <Link className="navbar-item" to={`/home/movies`}>
+            <Link className="navbar-item" to={`/home`}>
             Discover
             </Link>
             <Link className="navbar-item" to={`/watchlist`}>

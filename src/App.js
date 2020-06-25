@@ -69,13 +69,9 @@ class App extends Component {
 
           {/* App Routes */}
           <PrivateRoute
-            path="/home/movies"
+            path="/home"
             component={Intro}
           />
-          {/* <PrivateRoute
-            path="/home/tvshows"
-            component={Intro}
-          /> */}
           <PrivateRoute
             path="/profile"
             component={Profile}

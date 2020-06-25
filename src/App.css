@@ -50,6 +50,17 @@
   justify-content: space-around;
 }
 
+.list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 20px 0 60px 0;
+}
+
+.list-item {
+  width: 46%;
+  margin: 0 6px 15px 6px
+}
 
 @keyframes App-logo-spin {
   from {
