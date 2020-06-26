@@ -1,15 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 let photoPath = 'https://image.tmdb.org/t/p/w500/'
 
 export default function HomeRater(props) {
   let imageSrc = photoPath + props.random.poster_path;
 
-  // {props.random.poster_path ? imageSrc : ''}
-
   return (
     <>
-      <img src={props.random.poster_path ? imageSrc : ''} alt={props.random.title} />
+      <Link to={`/${props.type}/${props.random.id}`}><img src={props.random.poster_path ? imageSrc : ''} alt={props.random.title} /></Link>
       
       <div className="columns is-mobile">
         <div className="column">

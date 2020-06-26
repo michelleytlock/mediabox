@@ -1,26 +1,24 @@
 import React from "react";
 
-import { Link } from "react-router-dom";
-
 export default function Filter(props) {
   let button = {
     marginTop: "10px",
     marginRight: "10px"
   }
+
+  let placeholder;
+  props.type == "movie" ? placeholder = "Search movies..." : placeholder = "Search tv shows..."
+
   return (
     <div className="main-filter">
-      <div className="media-filter">
-        <button className="button is-white" onClick={props.onMovieChange}><h5 className="title is-5">MOVIES</h5></button>
-        <button className="button is-white" onClick={props.onTVChange}><h5 className="title is-5">TV SHOWS</h5></button>
-      </div>
       <div className="search-filter">
         <input
           className="input searchbar"
           type="text"
-          placeholder={`Search...`}
+          placeholder={placeholder}
         />
-        <button style={button} className="button is-info is-light">Trending</button>
-        <button style={button} className="button is-success is-light">Recommended</button>
+        <button onClick={props.trending} style={button} className="button is-info is-light">Trending</button>
+        <button onClick={props.recommended} style={button} className="button is-success is-light">Recommended</button>
       </div>
     </div>
   );

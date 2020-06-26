@@ -11,6 +11,7 @@ class PrivateRoute extends Component {
 
   componentDidMount() {
     //check if there is a logged in user
+    console.log(this.props)
     if (!this.state.loggedInUser) {
       this.getUser();
     }
@@ -21,6 +22,7 @@ class PrivateRoute extends Component {
     axios
       .get(`${config.API_URL}/user`, { withCredentials: true })
       .then((res) => {
+        // console.log(res)
         if (res.data) {
           this.setState({
             loggedInUser: res.data,
@@ -38,12 +40,15 @@ class PrivateRoute extends Component {
   };
 
   render() {
+
+    let MyComponent = this.props.component
     if (!this.state.loggedInUser) {
       return null
       //loading
     }
-    console.log(this.state.loggedInUser)
-    let MyComponent = this.props.component
+    // console.log(this.state.loggedInUser)
+    // console.log(this.props.component)
+    
     return (
       <Route
         render={() => {

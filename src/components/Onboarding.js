@@ -4,7 +4,7 @@ import OnboardingRater from "./OnboardingRater";
 
 export default class Onboarding extends Component {
   render() {
-    console.log(this.props.ratedList)
+    // console.log(this.props.ratedList)
     return (
       <>
         <div>

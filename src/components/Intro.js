@@ -152,12 +152,12 @@ class Intro extends Component {
 
   render() {
     const { list } = this.state;
-    console.log(list)
+    // console.log(list)
     let rated = list.filter((media) => {
       return media.listType = "rated";
     });
 
-    console.log(rated)
+    // console.log(rated)
     return (
       <>
         {rated.length < 10 ? (

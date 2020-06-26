@@ -16,6 +16,7 @@ import LoginPage from "./components/LoginPage";
 import Intro from "./components/Intro";
 import Profile from "./components/Profile";
 import Watchlist from "./components/Watchlist";
+import MediaDetails from "./components/MediaDetails";
 
 class App extends Component {
 
@@ -27,7 +28,7 @@ class App extends Component {
 
     axios.post(`${config.API_URL}/signup`, { username, email, password }, { withCredentials: true })
       .then(() => {
-        this.props.history.push('/home/movies')
+        this.props.history.push('/home')
       })
   }
 
@@ -38,7 +39,7 @@ class App extends Component {
 
     axios.post(`${config.API_URL}/login`, { username, password }, { withCredentials: true })
       .then(() => {
-        this.props.history.push('/home/movies')
+        this.props.history.push('/home')
       })
   }
 
@@ -79,6 +80,10 @@ class App extends Component {
           <PrivateRoute
             path="/watchlist"
             component={Watchlist}
+          />
+          <PrivateRoute
+            path="/:mediaType/:id"
+            component={MediaDetails}
           />
         </Switch>
       </div>
