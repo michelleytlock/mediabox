@@ -17,6 +17,7 @@ import Intro from "./components/Intro";
 import Profile from "./components/Profile";
 import Watchlist from "./components/Watchlist";
 import MediaDetails from "./components/MediaDetails";
+import SearchResults from "./components/SearchResults";
 
 class App extends Component {
 
@@ -30,6 +31,9 @@ class App extends Component {
       .then(() => {
         this.props.history.push('/home')
       })
+      .catch((err) => {
+        console.log("sign up error" + err);
+      });
   }
 
   handleLogin = (e) => {
@@ -41,6 +45,9 @@ class App extends Component {
       .then(() => {
         this.props.history.push('/home')
       })
+      .catch((err) => {
+        console.log("log in err" + err);
+      });
   }
 
   render() {
@@ -84,6 +91,10 @@ class App extends Component {
           <PrivateRoute
             path="/:mediaType/:id"
             component={MediaDetails}
+          />
+          <PrivateRoute
+            path="/search"
+            component={SearchResults}
           />
         </Switch>
       </div>

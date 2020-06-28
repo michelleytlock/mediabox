@@ -50,6 +50,16 @@
   justify-content: center;
 }
 
+.search-filter {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.search-filter input {
+  width: 90%;
+  margin-right: 10px;
+}
+
 .list {
   display: flex;
   flex-direction: row;

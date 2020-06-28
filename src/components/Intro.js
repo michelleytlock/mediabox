@@ -14,26 +14,28 @@ class Intro extends Component {
   };
 
   componentDidMount() {
-    //is this necessary? isn't user already coming from PrivateRoute?
     axios
-      .get(`${config.API_URL}/user`, { withCredentials: true })
+      .get(`${config.API_URL}/userData`, { withCredentials: true })
       .then((res) => {
         this.setState({
-          list: res.data.list
-        })
+          list: res.data.list,
+        });
 
         let rated = this.state.list.filter((media) => {
-          return media.listType = "rated";
+          return (media.listType = "rated");
         });
 
         if (rated.length < 10) {
           this.getRandomMedia();
         }
       })
+      .catch((err) => {
+        console.log("CDM err" + err);
+      });
   }
 
   getRandomMedia = () => {
-    console.log('get random media console log')
+    console.log("get random media console log");
     let random = Math.floor(Math.random() * 2);
     let mediaType;
 
@@ -45,16 +47,14 @@ class Intro extends Component {
       )
       .then((res) => {
         let results = res.data.results.filter((media) => {
-          return media.poster_path
-        })
+          return media.poster_path;
+        });
 
         let randomNum = Math.floor(Math.random() * results.length);
-        
-        console.log(randomNum);
-        console.log(results);
-        console.log(results[randomNum]);
 
-        console.log(this.state.list)
+        // console.log(randomNum);
+        // console.log(results);
+        console.log(results[randomNum]);
 
         //FIX DUPLICATE MEDIAS
 
@@ -70,12 +70,15 @@ class Intro extends Component {
           randomMedia: results[randomNum],
           randomMediaType: mediaType,
         });
+      })
+      .catch((err) => {
+        console.log("getrandom err" + err);
       });
   };
 
   handleRate = (e) => {
     let rating = e.target.innerHTML;
-    // console.log(this.state.randomMedia);
+    console.log(this.state.randomMedia.genre_ids);
     // console.log(this.state.randomMediaType);
     axios
       .post(
@@ -91,11 +94,12 @@ class Intro extends Component {
             this.state.randomMediaType === "movie"
               ? this.state.randomMedia.title
               : this.state.randomMedia.name,
+          genres: this.state.randomMedia.genre_ids,
         },
         { withCredentials: true }
       )
       .then((response) => {
-        console.log(response.data.list)
+        console.log(response.data.list);
         this.setState({
           list: response.data.list,
           randomMedia: "",
@@ -109,7 +113,6 @@ class Intro extends Component {
         if (rated.length < 10) {
           this.getRandomMedia();
         }
-        
       })
       .catch((err) => {
         console.log("create media err" + err);
@@ -126,14 +129,16 @@ class Intro extends Component {
           listType: "skipped",
           description: this.state.randomMedia.overview,
           image: this.state.randomMedia.poster_path,
-          title: this.state.randomMediaType === "movie"
-          ? this.state.randomMedia.title
-          : this.state.randomMedia.name,
+          title:
+            this.state.randomMediaType === "movie"
+              ? this.state.randomMedia.title
+              : this.state.randomMedia.name,
+          genres: this.state.randomMedia.genre_ids,
         },
         { withCredentials: true }
       )
       .then((response) => {
-        console.log(response.data.list)
+        console.log(response.data.list);
         this.setState({
           list: response.data.list,
           randomMedia: "",
@@ -147,6 +152,9 @@ class Intro extends Component {
         if (rated.length < 10) {
           this.getRandomMedia();
         }
+      })
+      .catch((err) => {
+        console.log("skip err" + err);
       });
   };
 
@@ -154,7 +162,7 @@ class Intro extends Component {
     const { list } = this.state;
     // console.log(list)
     let rated = list.filter((media) => {
-      return media.listType = "rated";
+      return (media.listType = "rated");
     });
 
     // console.log(rated)
@@ -168,7 +176,7 @@ class Intro extends Component {
             onSkip={this.handleSkip}
           />
         ) : (
-            <Home />
+          <Home />
         )}
       </>
     );

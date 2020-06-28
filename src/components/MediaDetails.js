@@ -28,6 +28,9 @@ class MediaDetails extends Component {
           media: res.data.media,
           credits: res.data.credits,
         });
+      })
+      .catch((err) => {
+        console.log("CDM err" + err);
       });
   }
 
@@ -84,7 +87,7 @@ class MediaDetails extends Component {
         this.props.history.goBack();
       })
       .catch((err) => {
-        console.log("create media err" + err);
+        console.log("skip err" + err);
       });
   };
 

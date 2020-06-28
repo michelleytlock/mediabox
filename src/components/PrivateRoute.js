@@ -11,7 +11,6 @@ class PrivateRoute extends Component {
 
   componentDidMount() {
     //check if there is a logged in user
-    console.log(this.props)
     if (!this.state.loggedInUser) {
       this.getUser();
     }

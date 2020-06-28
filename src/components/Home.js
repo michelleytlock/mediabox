@@ -14,6 +14,7 @@ class Home extends Component {
     randomMediaType: "",
     list: [],
     mediaPage: "movie",
+    recommendedState: true,
   };
 
   componentDidMount() {
@@ -25,14 +26,40 @@ class Home extends Component {
             list: res.data.list,
           },
           () => {
-            console.log('CDM')
-            if (!window.localStorage.getItem("media")) {
-              this.getRandomMedia();
-            }
+            // console.log("CDM");
+            // if (!window.localStorage.getItem("media")) {
+            //   this.getRandomMedia();
+            // }
+            this.getRandomMedia();
           }
         );
+      })
+      .catch((err) => {
+        console.log("userData err" + err);
       });
   }
+
+  handleSearch = (e) => {
+    e.preventDefault();
+    console.log("hi");
+    console.log(e.target.search.value);
+    axios
+      .get(`${config.API_URL}/${this.state.mediaPage}/${e.target.search.value}/searchresults`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res.data)
+
+        let results = res.data.filter((media) => {
+          return media.poster_path;
+        });
+        console.log(this)
+        // this.props.history.push({ pathname: '/search', state: { results }})
+      })
+      .catch((err) => {
+        console.log("search err" + err);
+      });
+  };
 
   getRandomMedia = () => {
     // FILTER THROUGH LIST TO FIND "RATED" MEDIAS
@@ -45,8 +72,9 @@ class Home extends Component {
       return media.mediaType === this.state.mediaPage;
     });
 
-    console.log(this.state.mediaPage);
-    console.log(ratedMediaType);
+    // console.log(this.state.mediaPage);
+    // console.log(ratedMediaType);
+    // console.log(this.state.recommendedState);
 
     let randomRatedMediaIndex = Math.floor(
       Math.random() * ratedMediaType.length
@@ -66,20 +94,52 @@ class Home extends Component {
 
         let randomResultsIndex = Math.floor(Math.random() * results.length);
 
-        console.log(randomResultsIndex);
-        console.log('This is set ',results[randomResultsIndex]);
-        window.localStorage.setItem("media", JSON.stringify(results[randomResultsIndex]));
-        window.localStorage.setItem("type", this.state.mediaPage);
+        // console.log(randomResultsIndex);
+        console.log(
+          "This is recommended random media ",
+          results[randomResultsIndex]
+        );
+
+        // window.localStorage.setItem("media", JSON.stringify(results[randomResultsIndex]));
+        // window.localStorage.setItem("type", this.state.mediaPage);
         this.setState({
+          recommendedState: true,
           randomMedia: results[randomResultsIndex],
           randomMediaType: this.state.mediaPage,
         });
+      })
+      .catch((err) => {
+        console.log("getRandom err" + err);
+      });
+  };
+
+  getTrendingMedia = () => {
+    console.log(this.state.recommendedState);
+    axios
+      .get(
+        `https://api.themoviedb.org/3/trending/${this.state.mediaPage}/day?api_key=${process.env.REACT_APP_API_KEY}`
+      )
+      .then((res) => {
+        let results = res.data.results.filter((media) => {
+          return media.poster_path;
+        });
+
+        let randomResultsIndex = Math.floor(Math.random() * results.length);
+        console.log("This is trending media ", results[randomResultsIndex]);
+        this.setState({
+          recommendedState: false,
+          randomMedia: results[randomResultsIndex],
+          randomMediaType: this.state.mediaPage,
+        });
+      })
+      .catch((err) => {
+        console.log("gettrending err" + err);
       });
   };
 
   handleRate = (e) => {
     let rating = e.target.innerHTML;
-
+    console.log(this.state.recommendedState);
     axios
       .post(
         `${config.API_URL}/create`,
@@ -94,6 +154,7 @@ class Home extends Component {
             this.state.randomMediaType === "movie"
               ? this.state.randomMedia.title
               : this.state.randomMedia.name,
+          genres: this.state.randomMedia.genres
         },
         { withCredentials: true }
       )
@@ -102,13 +163,18 @@ class Home extends Component {
 
         // FIX RATED MOVIES RENDERING AGAIN HERE
 
+        // window.localStorage.removeItem("media");
         this.setState(
           {
             list: response.data.list,
             randomMedia: "",
             randomMediaType: "",
           },
-          this.getRandomMedia
+          () => {
+            this.recommendedState
+              ? this.getRandomMedia()
+              : this.getTrendingMedia();
+          }
         );
       })
       .catch((err) => {
@@ -141,8 +207,15 @@ class Home extends Component {
             randomMedia: "",
             randomMediaType: "",
           },
-          this.getRandomMedia
+          () => {
+            this.recommendedState
+              ? this.getRandomMedia()
+              : this.getTrendingMedia();
+          }
         );
+      })
+      .catch((err) => {
+        console.log("skip err" + err);
       });
   };
 
@@ -171,8 +244,15 @@ class Home extends Component {
             randomMedia: "",
             randomMediaType: "",
           },
-          this.getRandomMedia
+          () => {
+            this.recommendedState
+              ? this.getRandomMedia()
+              : this.getTrendingMedia();
+          }
         );
+      })
+      .catch((err) => {
+        console.log("save to watchlist err" + err);
       });
   };
 
@@ -195,13 +275,13 @@ class Home extends Component {
   };
 
   render() {
-    let media = this.state.randomMedia
+    let media = this.state.randomMedia;
     let type = this.state.randomMediaType;
 
-    if (window.localStorage.getItem("media")) {
-      media = JSON.parse(window.localStorage.getItem("media"));
-      type = window.localStorage.getItem("type")
-    }
+    // if (window.localStorage.getItem("media")) {
+    //   media = JSON.parse(window.localStorage.getItem("media"));
+    //   type = window.localStorage.getItem("type")
+    // }
 
     return (
       <>
@@ -209,7 +289,12 @@ class Home extends Component {
           onMovieChange={this.handleToggleMovie}
           onTVChange={this.handleToggleTV}
         />
-        <Filter type={type}/>
+        <Filter
+          type={type}
+          trending={this.getTrendingMedia}
+          recommended={this.getRandomMedia}
+          onSearch={this.handleSearch}
+        />
         <HomeRater
           random={media}
           type={type}
