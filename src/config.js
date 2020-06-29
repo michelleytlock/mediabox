@@ -1,3 +1,3 @@
 export default {
-  API_URL: process.env.REACT_APP_API_URL || 'http://localhost:5000/mediabox'
+  API_URL: 'https://media-box.herokuapp.com/mediabox' || 'http://localhost:5000/mediabox'
 }

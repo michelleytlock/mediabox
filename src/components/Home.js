@@ -14,7 +14,7 @@ class Home extends Component {
     randomMediaType: "",
     list: [],
     mediaPage: "movie",
-    recommendedState: true,
+    recommendedState: true
   };
 
   componentDidMount() {
@@ -41,8 +41,10 @@ class Home extends Component {
 
   handleSearch = (e) => {
     e.preventDefault();
-    console.log("hi");
+    
     console.log(e.target.search.value);
+    console.log(this.props.history)
+
     axios
       .get(`${config.API_URL}/${this.state.mediaPage}/${e.target.search.value}/searchresults`, {
         withCredentials: true,
@@ -53,8 +55,15 @@ class Home extends Component {
         let results = res.data.filter((media) => {
           return media.poster_path;
         });
-        console.log(this)
-        // this.props.history.push({ pathname: '/search', state: { results }})
+
+        let objResults = {
+          results: results,
+          mediaPage: this.state.mediaPage
+        }
+
+        console.log(objResults)
+        this.props.handleSearchProps(objResults)
+        this.props.history.push('/search')
       })
       .catch((err) => {
         console.log("search err" + err);
@@ -81,6 +90,8 @@ class Home extends Component {
     );
 
     let randomRatedMedia = ratedMediaType[randomRatedMediaIndex];
+
+    console.log(randomRatedMedia)
 
     axios
       .get(

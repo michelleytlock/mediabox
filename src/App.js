@@ -5,7 +5,9 @@ import config from "./config";
 import axios from "axios";
 
 import 'bulma/css/bulma.css';
-import "./App.css";
+import "./sass/mystyles.scss";
+import './App.css';
+
 
 import PrivateRoute from "./components/PrivateRoute";
 
@@ -20,6 +22,14 @@ import MediaDetails from "./components/MediaDetails";
 import SearchResults from "./components/SearchResults";
 
 class App extends Component {
+
+  state = {
+    searchResults: {},
+  }
+
+  componentWillMount() {
+  
+  }
 
   handleSignUp = (e) => {
     e.preventDefault();
@@ -50,9 +60,16 @@ class App extends Component {
       });
   }
 
+  handleSearch = (results) => {
+    console.log('handle search', results)
+    this.setState({
+      searchResults: results
+    })
+  }
+
   render() {
     return (
-      <div className="App">
+      <div>
         <Switch>
           {/* Auth Routes */}
           <Route
@@ -79,6 +96,7 @@ class App extends Component {
           <PrivateRoute
             path="/home"
             component={Intro}
+            handleSearchProps={this.handleSearch}
           />
           <PrivateRoute
             path="/profile"
@@ -95,6 +113,7 @@ class App extends Component {
           <PrivateRoute
             path="/search"
             component={SearchResults}
+            list={this.state.searchResults}
           />
         </Switch>
       </div>

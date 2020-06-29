@@ -17,13 +17,19 @@ class Intro extends Component {
     axios
       .get(`${config.API_URL}/userData`, { withCredentials: true })
       .then((res) => {
+
+        // console.log(this.props)
         this.setState({
           list: res.data.list,
         });
 
-        let rated = this.state.list.filter((media) => {
-          return (media.listType = "rated");
-        });
+        let rated = [];
+
+        if (this.state.list.length !== 0) {
+          rated = this.state.list.filter((media) => {
+            return (media.listType = "rated");
+          });
+        }
 
         if (rated.length < 10) {
           this.getRandomMedia();
@@ -165,7 +171,7 @@ class Intro extends Component {
       return (media.listType = "rated");
     });
 
-    // console.log(rated)
+    
     return (
       <>
         {rated.length < 10 ? (
@@ -176,7 +182,7 @@ class Intro extends Component {
             onSkip={this.handleSkip}
           />
         ) : (
-          <Home />
+            <Home {...this.props} />
         )}
       </>
     );
