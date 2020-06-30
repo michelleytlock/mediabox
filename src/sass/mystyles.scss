@@ -4,8 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 // Set your brand colors
-$pink: #F64A8A;
-$blue: #00Bfff;
+$red: #e20f0f;
 $grey-dark: #4A6670;
 $white: #FFFFFF;
 $black: #00000A;
@@ -19,8 +18,8 @@ $family-primary: $family-sans-serif;
 $family-secondary: $family-serif;
 $text: $black;
 $text-strong: $black;
-$primary: $pink;
-$link: $white;
+$primary: $red;
+$link: $red;
 $widescreen-enabled: false;
 $fullhd-enabled: false;
 

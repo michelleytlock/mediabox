@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import { Link } from "react-router-dom";
 import config from "../config";
 import axios from "axios";
 import Chart from "chart.js";
@@ -7,6 +6,8 @@ import Chart from "chart.js";
 import Navbar from "./Navbar";
 import MediaFilter from "./MediaFilter";
 import List from "./List";
+
+import "../styles/Profile.css";
 
 class Profile extends Component {
   state = {
@@ -16,7 +17,7 @@ class Profile extends Component {
     topTVGenres: [],
     mediaPage: "movie",
     allMovieGenres: [],
-    allTVGenres: []
+    allTVGenres: [],
   };
 
   componentDidMount() {
@@ -67,15 +68,18 @@ class Profile extends Component {
               return newMovieGenresArr.includes(genre.id);
             });
 
-            let chartMovieGenres = genres.data.movie.genres.reduce((filtered, elem) => {
-              for (let i = 0; i < movieGenresArr.length; i++) {
-                if (elem.id === Number(movieGenresArr[i][0])) {
-                  movieGenresArr[i][0] = elem.name;
-                  filtered.push(movieGenresArr[i])
+            let chartMovieGenres = genres.data.movie.genres.reduce(
+              (filtered, elem) => {
+                for (let i = 0; i < movieGenresArr.length; i++) {
+                  if (elem.id === Number(movieGenresArr[i][0])) {
+                    movieGenresArr[i][0] = elem.name;
+                    filtered.push(movieGenresArr[i]);
+                  }
                 }
-              }
-              return filtered
-            }, [])
+                return filtered;
+              },
+              []
+            );
 
             //FIND MOST WATCHED TV GENRES
             let listOfTVGenres = {};
@@ -105,15 +109,18 @@ class Profile extends Component {
               return newTvGenresArr.includes(genre.id);
             });
 
-            let chartTVGenres = genres.data.tv.genres.reduce((filtered, elem) => {
-              for (let i = 0; i < tvGenresArr.length; i++) {
-                if (elem.id === Number(tvGenresArr[i][0])) {
-                  tvGenresArr[i][0] = elem.name;
-                  filtered.push(tvGenresArr[i])
+            let chartTVGenres = genres.data.tv.genres.reduce(
+              (filtered, elem) => {
+                for (let i = 0; i < tvGenresArr.length; i++) {
+                  if (elem.id === Number(tvGenresArr[i][0])) {
+                    tvGenresArr[i][0] = elem.name;
+                    filtered.push(tvGenresArr[i]);
+                  }
                 }
-              }
-              return filtered
-            }, [])
+                return filtered;
+              },
+              []
+            );
 
             // console.log(genres.data.movie);
             // console.log(newMovieGenresArr);
@@ -128,7 +135,7 @@ class Profile extends Component {
                 topMovieGenres,
                 topTVGenres,
                 allMovieGenres: chartMovieGenres,
-                allTVGenres: chartTVGenres
+                allTVGenres: chartTVGenres,
               },
               () => {
                 this.renderChart();
@@ -215,7 +222,12 @@ class Profile extends Component {
   };
 
   renderChart = () => {
-    const { ratedMovies, ratedTVShows, allMovieGenres, allTVGenres } = this.state;
+    const {
+      ratedMovies,
+      ratedTVShows,
+      allMovieGenres,
+      allTVGenres,
+    } = this.state;
 
     let ones = 0,
       twos = 0,
@@ -272,7 +284,7 @@ class Profile extends Component {
     }
 
     var ctx = document.getElementById("myChart");
-    var myChart = new Chart(ctx, {
+    new Chart(ctx, {
       type: "bar",
       data: {
         labels: ["1", "2", "3", "4", "5"],
@@ -334,30 +346,30 @@ class Profile extends Component {
       },
     });
 
-    let genreLabels = []
-    let genreData = []
+    let genreLabels = [];
+    let genreData = [];
 
     // console.log(allMovieGenres)
     if (this.state.mediaPage === "movie") {
       genreLabels = allMovieGenres.map((elem) => {
-        return elem[0]
-      })
-  
+        return elem[0];
+      });
+
       genreData = allMovieGenres.map((elem) => {
-        return elem[1]
-      })
+        return elem[1];
+      });
     } else {
       genreLabels = allTVGenres.map((elem) => {
-        return elem[0]
-      })
-  
+        return elem[0];
+      });
+
       genreData = allTVGenres.map((elem) => {
-        return elem[1]
-      })
+        return elem[1];
+      });
     }
 
     var ctx2 = document.getElementById("myDoughnutChart");
-    var myDoughnutChart = new Chart(ctx2, {
+    new Chart(ctx2, {
       type: "doughnut",
       data: {
         datasets: [
@@ -370,7 +382,7 @@ class Profile extends Component {
               "rgba(255, 206, 86, 0.2)",
               "rgba(255, 206, 86, 0.2)",
               "rgba(255, 206, 86, 0.2)",
-              "rgba(255, 206, 86, 0.2)"
+              "rgba(255, 206, 86, 0.2)",
             ],
             borderColor: [
               "rgba(255, 99, 132, 1)",
@@ -379,7 +391,7 @@ class Profile extends Component {
               "rgba(255, 206, 86, 1)",
               "rgba(255, 206, 86, 1)",
               "rgba(255, 206, 86, 1)",
-              "rgba(255, 206, 86, 1)"
+              "rgba(255, 206, 86, 1)",
             ],
           },
         ],
@@ -411,12 +423,22 @@ class Profile extends Component {
     let month = monthNames[date.getMonth()];
 
     return (
-      <>
-        <h1>{this.props.loggedInUser.username}</h1>
-        <h1>{this.props.loggedInUser.email}</h1>
-        <h1>
-          Joined in {month} {year}
-        </h1>
+      <div className="profile-page">
+        <div className="user-info">
+          <img src="" />
+          <h5 className="user-info-text">
+            <strong>Name:</strong>{" "}
+            {this.props.loggedInUser.username.substring(0, 1).toUpperCase() +
+              this.props.loggedInUser.username.substring(1)}
+          </h5>
+          <h5 className="user-info-text">
+            <strong>Email:</strong> {this.props.loggedInUser.email}
+          </h5>
+          <h5 className="user-info-text">
+            <strong>Joined:</strong> {month} {year}
+          </h5>
+        </div>
+
         <MediaFilter
           onMovieChange={this.handleToggleMovie}
           onTVChange={this.handleToggleTV}
@@ -460,7 +482,7 @@ class Profile extends Component {
           type={this.state.mediaPage}
         />
         <Navbar />
-      </>
+      </div>
     );
   }
 }

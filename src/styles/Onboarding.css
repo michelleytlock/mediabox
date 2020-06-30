@@ -1,0 +1,53 @@
+/* $red: #e20f0f;
+$grey-dark: #4A6670;
+$white: #FFFFFF;
+$black: #00000A; */
+
+.onboarding-page {
+  margin: 15px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.progress-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 15px
+}
+
+.progress-percentage {
+  font-weight: 700;
+  margin-bottom: 3px
+}
+
+.rater {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rating-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 20px 0 20px 0;
+}
+
+.circle-buttons {
+  border-radius: 100%;
+}
+
+.media-image {
+  width: 85%
+}
+
+.instructions {
+  background-color: #4A6670;
+  color: white;
+  width: 100vw;
+  padding: 15px 30px;
+  text-align: center;
+}

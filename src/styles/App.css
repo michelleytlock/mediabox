@@ -1,0 +1,109 @@
+/* $red: #e20f0f;
+$grey-dark: #4A6670;
+$white: #FFFFFF;
+$black: #00000A; */
+
+/* LOADING SCREEN */
+.loading {
+  background-color: #00000A;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  font-family: "Fredoka One", cursive;
+  font-size: 40px;
+  letter-spacing: -2px;
+  color: #FFFFFF;
+  margin-bottom: 10px;
+}
+
+/* LANDING SCREEN */
+.landing {
+  background-color: #00000A;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+.landing:before {
+  content: ' ';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.15;
+    background-image: url('https://res.cloudinary.com/michelleytlock/image/upload/v1593523094/mediabox-assets/landingbg_orkmj8.jpg');
+    background-repeat: no-repeat;
+    background-position: 50% 70%;
+    -ms-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+.landing-content {
+  width: 100vw;
+  margin: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 2;
+  position: relative
+}
+
+.intro-text {
+  color: white;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 30px;
+}
+
+.signup-button {
+  font-weight: 700;
+}
+
+.login-button {
+  position: absolute;
+  top: 0;
+  right: 0
+}
+
+/* SIGN UP & LOG IN PAGE */
+.signup-page {
+  margin: 40px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.close-button {
+  border: 0;
+  background-color: white;
+  position: absolute;
+  top: 0;
+  right: 0
+}
+
+.title {
+  font-weight: 900;
+}
+
+.signup-page input {
+  border-bottom: 1px solid #4A6670;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+.last-field input {
+  margin-bottom: 30px;
+}

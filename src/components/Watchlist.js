@@ -1,10 +1,21 @@
 import React, { Component } from "react";
 import config from "../config";
 import axios from "axios";
+import Lottie from "react-lottie";
+import * as loadingData from "../loadingAnimation.json";
 
 import Navbar from "./Navbar";
 import MediaFilter from "./MediaFilter";
 import List from "./List";
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationDate: loadingData.default,
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+  },
+};
 
 class Watchlist extends Component {
   state = {
@@ -51,21 +62,22 @@ class Watchlist extends Component {
       return media.mediaType === mediaPage;
     });
 
-    // console.log(filterByMediaType)
-
     return (
-      <>
+      <div className="watchlist-page">
         <MediaFilter
           onMovieChange={this.handleToggleMovie}
           onTVChange={this.handleToggleTV}
         />
         {filterByMediaType.length === 0 ? (
-          <h1>Start adding to your Watchlist!</h1>
+          <div className="watchlist-placeholder">
+            <Lottie options={defaultOptions} height={120} width={120} />
+            <h3 className="subtitle is-3">Start adding to <br/> your watchlist!</h3>
+          </div>
         ) : (
           <List list={filterByMediaType} type={this.state.mediaPage} />
         )}
         <Navbar />
-      </>
+      </div>
     );
   }
 }

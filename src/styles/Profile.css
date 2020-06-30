@@ -1,0 +1,24 @@
+/* $red: #e20f0f;
+$grey-dark: #4A6670;
+$white: #FFFFFF;
+$black: #00000A; */
+
+.profile-page {
+  margin: 20px 30px 0 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.user-info {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.user-info-text {
+  font-size: 18px;
+}
+
+.user-info-text strong {
+  color: #e20f0f;
+}

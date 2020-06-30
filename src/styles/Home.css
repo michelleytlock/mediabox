@@ -1,0 +1,164 @@
+/* $red: #e20f0f;
+$grey-dark: #4A6670;
+$white: #FFFFFF;
+$black: #00000A; */
+
+/* HOME */
+.home-page {
+  margin: 20px 30px 0 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* RATER */
+.rater {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.rating-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 8px 0 15px 0;
+}
+
+.circle-buttons {
+  border-radius: 100%;
+}
+
+.media-image {
+  width: 75%;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.action-buttons button {
+  margin-right: 10px;
+}
+
+/* NAVBAR */
+.myNav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  font-weight: 700;
+  height: 60px;
+  padding: 0 30px;
+}
+
+.navbar-item {
+  color: white;
+  text-transform: uppercase;
+  font-size: 19px;
+}
+
+/* FILTERS */
+.main-filter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 5px 0 20px 0
+}
+
+.media-filter {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.search-filter {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.search-filter input {
+  width: 85%;
+  margin-right: 10px;
+  border-bottom: 1px solid #4A6670;
+  padding: 0;
+}
+
+.random-medias-toggler {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.random-medias-toggler button {
+  margin-top: 15px;
+  margin-right: 10px
+}
+
+/* WATCHLIST */
+.watchlist-page {
+  margin: 20px 20px 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.watchlist-placeholder {
+  text-align: center;
+}
+
+/* LIST */
+.list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 10px 0 70px 0;
+}
+
+.list-item {
+  width: 46%;
+  margin: 0 6px 15px 6px
+}
+
+.list-item-title {
+  color: black;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+}
+
+/* SEARCH RESULTS */
+.search-results-page {
+  margin: 0px 20px 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.back-button {
+  width: fit-content;
+  border: 0;
+  background-color: white;
+  padding: 0
+}
+
+.header {
+  margin: 20px 25px 0 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-type {
+  color: #e20f0f;
+}

@@ -1,9 +1,17 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import Icon from "@mdi/react";
+import { mdiClose } from "@mdi/js";
 
 export default function SignupPage(props) {
   return (
-    <div className="columns">
-      <div className="column">
+    <div className="signup-page">
+      <button className="close-button">
+        <Link to="/">
+          <Icon path={mdiClose} size={1.5} color="black" />
+        </Link>
+      </button>
+      <div className="form">
         <h1 className="title">Sign Up</h1>
         <form onSubmit={props.onSignup}>
           {/* USERNAME */}
@@ -16,7 +24,7 @@ export default function SignupPage(props) {
               type="text"
               id="username"
               name="username"
-              placeholder="Username"
+              placeholder="moaningmyrtle"
             />
           </div>
           {/* EMAIL */}
@@ -29,11 +37,11 @@ export default function SignupPage(props) {
               type="email"
               id="email"
               name="email"
-              placeholder="user@user.com"
+              placeholder="myrtle@girlsbathroom.com"
             />
           </div>
           {/* PASSWORD */}
-          <div className="field">
+          <div className="field last-field">
             <label className="label" htmlFor="password">
               Password
             </label>
@@ -48,10 +56,14 @@ export default function SignupPage(props) {
           {/* BUTTONS */}
           <div className="field">
             <div className="control">
-              <button type="submit" className="button is-link">Submit</button>
+              <button
+                type="submit"
+                className="button is-rounded is-primary is-fullwidth is-medium signup-button"
+              >
+                Submit
+              </button>
             </div>
           </div>
-
         </form>
       </div>
     </div>

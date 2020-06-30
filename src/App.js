@@ -6,7 +6,7 @@ import axios from "axios";
 
 import 'bulma/css/bulma.css';
 import "./sass/mystyles.scss";
-import './App.css';
+import './styles/App.css';
 
 
 import PrivateRoute from "./components/PrivateRoute";
@@ -25,10 +25,6 @@ class App extends Component {
 
   state = {
     searchResults: {},
-  }
-
-  componentWillMount() {
-  
   }
 
   handleSignUp = (e) => {

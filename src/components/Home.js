@@ -7,6 +7,8 @@ import Navbar from "./Navbar";
 import HomeRater from "./HomeRater";
 import Filter from "./Filter";
 
+import "../styles/Home.css";
+
 class Home extends Component {
   state = {
     user: this.props.loggedInUser,
@@ -295,7 +297,7 @@ class Home extends Component {
     // }
 
     return (
-      <>
+      <div className="home-page">
         <MediaFilter
           onMovieChange={this.handleToggleMovie}
           onTVChange={this.handleToggleTV}
@@ -314,7 +316,7 @@ class Home extends Component {
           onSave={this.handleSave}
         />
         <Navbar />
-      </>
+      </div>
     );
   }
 }

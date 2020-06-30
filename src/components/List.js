@@ -5,8 +5,10 @@ let photoPath = "https://image.tmdb.org/t/p/w500/";
 
 export default function List(props) {
   console.log(props.list);
-  let list = props.list.results
+  let list = [];
   let type = '';
+
+  props.list.results ? list = props.list.results : list = props.list
 
   props.list.mediaPage ? type = props.list.mediaPage : type = props.type
 
@@ -32,7 +34,7 @@ export default function List(props) {
                   src={photoPath + image}
                   alt={title}
                 />
-                <h5 className="subtitle is-5">{title}</h5>
+                <p className="list-item-title">{title}</p>
                 {media.rating && <p>{media.rating}</p>}
               </Link>
             </div>

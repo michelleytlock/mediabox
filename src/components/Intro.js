@@ -83,8 +83,9 @@ class Intro extends Component {
   };
 
   handleRate = (e) => {
+    e.preventDefault();
     let rating = e.target.innerHTML;
-    console.log(this.state.randomMedia.genre_ids);
+    console.log('rating ', rating);
     // console.log(this.state.randomMediaType);
     axios
       .post(
@@ -126,6 +127,7 @@ class Intro extends Component {
   };
 
   handleSkip = () => {
+    console.log('skipping')
     axios
       .post(
         `${config.API_URL}/create`,
@@ -171,7 +173,10 @@ class Intro extends Component {
       return (media.listType = "rated");
     });
 
-    
+    if (!list.length) {
+      return <div>Loading . . . </div>
+    }
+
     return (
       <>
         {rated.length < 10 ? (

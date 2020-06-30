@@ -1,11 +1,7 @@
 import React from "react";
 
 export default function Filter(props) {
-  let button = {
-    marginTop: "10px",
-    marginRight: "10px",
-  };
-  
+
   let placeholder;
   props.type === "movie"
     ? (placeholder = "Search movies...")
@@ -13,28 +9,27 @@ export default function Filter(props) {
 
   return (
     <div className="main-filter">
-      <div>
-        <form className="search-filter" onSubmit={props.onSearch}>
-          <input
-            className="input searchbar"
-            name="search"
-            type="text"
-            placeholder={placeholder}
-          />
-          <button className="button is-primary is-rounded" type="submit">Search</button>
-        </form>
-
+      <form className="search-filter" onSubmit={props.onSearch}>
+        <input
+          className="input searchbar"
+          name="search"
+          type="text"
+          placeholder={placeholder}
+        />
+        <button className="button is-primary is-rounded" type="submit">
+          Search
+        </button>
+      </form>
+      <div className="random-medias-toggler">
         <button
           onClick={props.recommended}
-          style={button}
-          className="button is-success is-light"
+          className="button is-rounded"
         >
-          Recommended For You
+          Recommended
         </button>
         <button
           onClick={props.trending}
-          style={button}
-          className="button is-info is-light"
+          className="button is-rounded"
         >
           Trending
         </button>
