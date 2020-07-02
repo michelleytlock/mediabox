@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import config from "../config";
 import axios from "axios";
+import FadeIn from "react-fade-in";
+import Lottie from "react-lottie";
+import loadingData from "../pageLoadingAnimation.json";
 
 import Onboarding from "./Onboarding";
 import Home from "./Home";
@@ -11,16 +14,17 @@ class Intro extends Component {
     randomMedia: "",
     randomMediaType: "",
     list: [],
+    dataFetched: false,
   };
 
   componentDidMount() {
     axios
       .get(`${config.API_URL}/userData`, { withCredentials: true })
       .then((res) => {
-
         // console.log(this.props)
         this.setState({
           list: res.data.list,
+          dataFetched: true,
         });
 
         let rated = [];
@@ -37,6 +41,9 @@ class Intro extends Component {
       })
       .catch((err) => {
         console.log("CDM err" + err);
+        this.setState({
+          dataFetched: true,
+        });
       });
   }
 
@@ -52,28 +59,30 @@ class Intro extends Component {
         `https://api.themoviedb.org/3/${mediaType}/popular?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`
       )
       .then((res) => {
+        console.log(res.data.results);
         let results = res.data.results.filter((media) => {
           return media.poster_path;
         });
 
-        let randomNum = Math.floor(Math.random() * results.length);
+        let filterForRepeats = results.filter((media) => {
+          let check = true;
+          this.state.list.forEach((element) => {
+            if (media.id === element.apiId) {
+              check = false;
+            }
+          });
+          return check;
+        });
 
-        // console.log(randomNum);
-        // console.log(results);
-        console.log(results[randomNum]);
+        console.log(filterForRepeats);
+        console.log(this.state.list);
 
-        //FIX DUPLICATE MEDIAS
+        let randomNum = Math.floor(Math.random() * filterForRepeats.length);
 
-        // for (let i = 0; i < results.length; i++) {
-        //   if (this.state.list && this.state.list.some(
-        //     e => { return e.apiId === results[i].id }
-        //   )) {
-        //     randomNum = i;
-        //   }
-        // }
+        console.log(filterForRepeats[randomNum]);
 
         this.setState({
-          randomMedia: results[randomNum],
+          randomMedia: filterForRepeats[randomNum],
           randomMediaType: mediaType,
         });
       })
@@ -85,28 +94,28 @@ class Intro extends Component {
   handleRate = (e) => {
     e.preventDefault();
     let rating = e.target.innerHTML;
-    console.log('rating ', rating);
+    console.log("rating ", rating);
     // console.log(this.state.randomMediaType);
+    const { randomMediaType, randomMedia } = this.state;
     axios
       .post(
         `${config.API_URL}/create`,
         {
-          mediaType: this.state.randomMediaType,
-          apiId: this.state.randomMedia.id,
+          mediaType: randomMediaType,
+          apiId: randomMedia.id,
           listType: "rated",
           rating,
-          description: this.state.randomMedia.overview,
-          image: this.state.randomMedia.poster_path,
+          description: randomMedia.overview,
+          image: randomMedia.poster_path,
           title:
-            this.state.randomMediaType === "movie"
-              ? this.state.randomMedia.title
-              : this.state.randomMedia.name,
-          genres: this.state.randomMedia.genre_ids,
+            randomMediaType === "movie" ? randomMedia.title : randomMedia.name,
+          genres: randomMedia.genre_ids,
         },
         { withCredentials: true }
       )
       .then((response) => {
         console.log(response.data.list);
+
         this.setState({
           list: response.data.list,
           randomMedia: "",
@@ -127,39 +136,40 @@ class Intro extends Component {
   };
 
   handleSkip = () => {
-    console.log('skipping')
+    console.log("skipping");
+    const { randomMediaType, randomMedia } = this.state;
     axios
       .post(
         `${config.API_URL}/create`,
         {
-          mediaType: this.state.randomMediaType,
-          apiId: this.state.randomMedia.id,
+          mediaType: randomMediaType,
+          apiId: randomMedia.id,
           listType: "skipped",
-          description: this.state.randomMedia.overview,
-          image: this.state.randomMedia.poster_path,
+          description: randomMedia.overview,
+          image: randomMedia.poster_path,
           title:
-            this.state.randomMediaType === "movie"
-              ? this.state.randomMedia.title
-              : this.state.randomMedia.name,
-          genres: this.state.randomMedia.genre_ids,
+            randomMediaType === "movie" ? randomMedia.title : randomMedia.name,
+          genres: randomMedia.genre_ids,
         },
         { withCredentials: true }
       )
-      .then((response) => {
-        console.log(response.data.list);
-        this.setState({
-          list: response.data.list,
-          randomMedia: "",
-          randomMediaType: "",
-        });
+      .then((response1) => {
+        this.setState(
+          {
+            list: response1.data.list,
+            randomMedia: "",
+            randomMediaType: "",
+          },
+          () => {
+            let rated = this.state.list.filter((media) => {
+              return media.listType === "rated";
+            });
 
-        let rated = this.state.list.filter((media) => {
-          return media.listType === "rated";
-        });
-
-        if (rated.length < 10) {
-          this.getRandomMedia();
-        }
+            if (rated.length < 10) {
+              this.getRandomMedia();
+            }
+          }
+        );
       })
       .catch((err) => {
         console.log("skip err" + err);
@@ -167,14 +177,29 @@ class Intro extends Component {
   };
 
   render() {
-    const { list } = this.state;
-    // console.log(list)
+    const { list, dataFetched } = this.state;
+
     let rated = list.filter((media) => {
-      return (media.listType = "rated");
+      return media.listType === "rated";
     });
 
-    if (!list.length) {
-      return <div>Loading . . . </div>
+    const defaultOptions = {
+      loop: true,
+      autoplay: true,
+      animationData: loadingData,
+      rendererSettings: {
+        preserveAspectRatio: "xMidYMid slice",
+      },
+    };
+
+    if (!dataFetched) {
+      return (
+        <div className="loading">
+          <FadeIn className="loading-animation">
+            <Lottie options={defaultOptions} height={250} width={250} />
+          </FadeIn>
+        </div>
+      );
     }
 
     return (
@@ -187,7 +212,7 @@ class Intro extends Component {
             onSkip={this.handleSkip}
           />
         ) : (
-            <Home {...this.props} />
+          <Home {...this.props} />
         )}
       </>
     );

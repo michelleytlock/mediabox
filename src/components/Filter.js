@@ -1,11 +1,8 @@
 import React from "react";
 
 export default function Filter(props) {
-
-  let placeholder;
-  props.type === "movie"
-    ? (placeholder = "Search movies...")
-    : (placeholder = "Search tv shows...");
+  let placeholder =
+    props.type === "movie" ? "Search movies..." : "Search tv shows...";
 
   return (
     <div className="main-filter">
@@ -23,13 +20,21 @@ export default function Filter(props) {
       <div className="random-medias-toggler">
         <button
           onClick={props.recommended}
-          className="button is-rounded"
+          className={
+            props.recommendedState
+              ? "button is-rounded active-button"
+              : "button is-rounded"
+          }
         >
           Recommended
         </button>
         <button
           onClick={props.trending}
-          className="button is-rounded"
+          className={
+            !props.recommendedState
+              ? "button is-rounded active-button"
+              : "button is-rounded"
+          }
         >
           Trending
         </button>

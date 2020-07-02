@@ -29,13 +29,13 @@ export default function List(props) {
 
           return (
             <div key={index} className="list-item">
-              <Link to={`/${type}/${id}`}>
+              <Link to={{pathname: `/${type}/${id}`, state: {fromPage: `${props.fromPage}`}}}>
                 <img
                   src={photoPath + image}
                   alt={title}
                 />
                 <p className="list-item-title">{title}</p>
-                {media.rating && <p>{media.rating}</p>}
+                {media.rating && <p className="list-item-rating">{media.rating}</p>}
               </Link>
             </div>
           );

@@ -4,13 +4,23 @@ $white: #FFFFFF;
 $black: #00000A; */
 
 .profile-page {
-  margin: 20px 30px 0 30px;
+  margin: 30px 20px 80px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
+.profile-page-footer {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
 .user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
   margin-bottom: 20px;
 }
@@ -21,4 +31,108 @@ $black: #00000A; */
 
 .user-info-text strong {
   color: #e20f0f;
+}
+
+.placeholder-profile {
+  background-color: #d7d7d7;
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  padding: 10px
+}
+
+.real-profile {
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+}
+
+.profile-pic {
+  border-radius: 50%;
+  height: 100px;
+  object-fit: cover;
+}
+
+.profile-pic-uploader {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-pic-uploader input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1
+}
+
+.profile-pic-uploader input + label {
+  font-weight: 700;
+  font-style: italic;
+  color: #e20f0f;
+  border: 0.5px solid #e20f0f;
+  border-radius: 15px;
+  display: inline-block;
+  padding: 2px 20px;
+  margin-right: 10px;
+}
+
+.profile-pic-uploader input:focus + label,
+.profile-pic-uploader input + label:hover {
+  color: white;
+  background-color: #4A6670;
+  border: 0.5px solid #4A6670;
+}
+
+.profile-pic-uploader input + label {
+	cursor: pointer; /* "hand" cursor */
+}
+
+.sorting-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 10px 0 20px 0;
+}
+
+.sorting-controls input {
+  margin-right: 3px;
+}
+
+.sorting-controls label {
+  color: #e20f0f;
+}
+
+.rated-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.rated-list button {
+  margin-bottom: 10px;
+}
+
+.genres-section {
+  margin: 20px 0 20px 0;
+  text-align: center;
+}
+
+.top-genres {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.modal-content {
+  background-color: white;
+  width: 80%;
+  padding: 30px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Icon from "@mdi/react";
-import { mdiKeyboardBackspace, mdiKeyboard } from "@mdi/js";
+import { mdiKeyboardBackspace } from "@mdi/js";
 
 import List from "./List";
 
@@ -23,7 +23,7 @@ class SearchResults extends Component {
           <h5 className="subtitle is-5 header-type">Search Results</h5>
         </div>
         <div className="search-results-page">
-          <List list={this.props.list} />
+          <List list={this.props.list} fromPage="search"/>
         </div>
       </>
     );

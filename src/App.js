@@ -8,7 +8,6 @@ import 'bulma/css/bulma.css';
 import "./sass/mystyles.scss";
 import './styles/App.css';
 
-
 import PrivateRoute from "./components/PrivateRoute";
 
 //COMPONENTS
@@ -25,34 +24,39 @@ class App extends Component {
 
   state = {
     searchResults: {},
+    usernameExists: undefined,
+    emailExists: undefined,
+    signUpError: false,
+    logInError: false
   }
 
   handleSignUp = (e) => {
     e.preventDefault();
-    let username = e.target.username.value
-    let email = e.target.email.value
-    let password = e.target.password.value
+    const { username, email, password } = e.target
 
-    axios.post(`${config.API_URL}/signup`, { username, email, password }, { withCredentials: true })
+    axios.post(`${config.API_URL}/signup`, { username: username.value, email: email.value, password: password.value }, { withCredentials: true })
       .then(() => {
         this.props.history.push('/home')
       })
       .catch((err) => {
-        console.log("sign up error" + err);
+        this.setState({
+          signUpError: true
+        })
       });
   }
 
   handleLogin = (e) => {
     e.preventDefault();
-    let username = e.target.username.value
-    let password = e.target.password.value
+    const { username, password } = e.target
 
-    axios.post(`${config.API_URL}/login`, { username, password }, { withCredentials: true })
+    axios.post(`${config.API_URL}/login`, { username: username.value, password: password.value }, { withCredentials: true })
       .then(() => {
         this.props.history.push('/home')
       })
       .catch((err) => {
-        console.log("log in err" + err);
+        this.setState({
+          logInError: true
+        })
       });
   }
 
@@ -60,7 +64,53 @@ class App extends Component {
     console.log('handle search', results)
     this.setState({
       searchResults: results
+    }, () => {
+      this.props.history.push('/search')
     })
+  }
+
+  checkUsername = (e) => {
+    e.preventDefault()
+    let username = e.target.value
+    console.log(username)
+    if (!username) {
+      this.setState({
+        usernameExists: undefined
+      })
+    } else {
+      axios.post(`${config.API_URL}/checkUsername`, { username }, { withCredentials: true })
+      .then((response) => {
+        console.log(response)
+        this.setState({
+          usernameExists: response.data
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+    }
+  }
+
+  checkEmail = (e) => {
+    e.preventDefault()
+    let email = e.target.value
+    console.log(email)
+    if (!email) {
+      this.setState({
+        emailExists: undefined
+      })
+    } else {
+      axios.post(`${config.API_URL}/checkEmail`, { email }, { withCredentials: true })
+      .then((response) => {
+        console.log(response)
+        this.setState({
+          emailExists: response.data
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+    }
   }
 
   render() {
@@ -78,13 +128,13 @@ class App extends Component {
           <Route
             path="/signup"
             render={(routeProps) => {
-              return <SignupPage onSignup={this.handleSignUp} {...routeProps} />;
+              return <SignupPage onSignup={this.handleSignUp} checkUsername={this.checkUsername} checkEmail={this.checkEmail} usernameStatus={this.state.usernameExists} emailStatus={this.state.emailExists} signUpStatus={this.state.signUpError} {...routeProps} />;
             }}
           />
           <Route
             path="/login"
             render={(routeProps) => {
-              return <LoginPage onLogin={this.handleLogin} {...routeProps} />;
+              return <LoginPage onLogin={this.handleLogin} logInStatus={this.state.logInError} {...routeProps} />;
             }}
           />
 

@@ -10,7 +10,7 @@ export default class Onboarding extends Component {
     return (
       <>
         <h5 className="is-5 instructions">
-          Rate the movie or tv show that appears to help us figure out what you like.
+          Rate the movie or tv show from a scale of 1 to 5 (from hated to loved) to help us figure out what you might like.
         </h5>
         <div className="onboarding-page">
           <h6 className="is-6 progress-percentage">

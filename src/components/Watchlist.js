@@ -64,7 +64,7 @@ class Watchlist extends Component {
 
     return (
       <div className="watchlist-page">
-        <MediaFilter
+        <MediaFilter mediaType={this.state.mediaPage} 
           onMovieChange={this.handleToggleMovie}
           onTVChange={this.handleToggleTV}
         />
@@ -74,7 +74,7 @@ class Watchlist extends Component {
             <h3 className="subtitle is-3">Start adding to <br/> your watchlist!</h3>
           </div>
         ) : (
-          <List list={filterByMediaType} type={this.state.mediaPage} />
+            <List list={filterByMediaType} type={this.state.mediaPage} fromPage="watchlist"/>
         )}
         <Navbar />
       </div>

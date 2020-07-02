@@ -44,6 +44,11 @@ $black: #00000A; */
   width: 85%
 }
 
+.onboarding-loading-media-image {
+  width: 236.250px;
+  height: 354.375px;
+}
+
 .instructions {
   background-color: #4A6670;
   color: white;

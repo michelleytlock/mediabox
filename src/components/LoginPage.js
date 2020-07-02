@@ -28,7 +28,7 @@ export default function LoginPage(props) {
             />
           </div>
           {/* PASSWORD */}
-          <div className="field last-field">
+          <div className="field">
             <label className="label" htmlFor="password">
               Password
             </label>
@@ -40,6 +40,10 @@ export default function LoginPage(props) {
               placeholder="***********"
             />
           </div>
+
+          {props.logInStatus && <div class="notification is-danger is-light">
+            Something went wrong. Please make sure your <strong>email</strong> is correct and your <strong>password</strong> has at least 8 characters, 1 number and 1 uppercase alphabet.
+          </div>}
           {/* BUTTONS */}
           <div className="field">
             <div className="control">

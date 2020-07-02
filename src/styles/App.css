@@ -14,6 +14,13 @@ $black: #00000A; */
   justify-content: center;
 }
 
+.loading-animation {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .logo {
   font-family: "Fredoka One", cursive;
   font-size: 40px;
@@ -68,6 +75,7 @@ $black: #00000A; */
 }
 
 .signup-button {
+  margin-top: 30px;
   font-weight: 700;
 }
 
@@ -100,10 +108,25 @@ $black: #00000A; */
 .signup-page input {
   border-bottom: 1px solid #4A6670;
   margin-top: -10px;
-  margin-bottom: 10px;
   padding: 0;
 }
 
-.last-field input {
-  margin-bottom: 30px;
+.input:hover {
+  border: transparent;
+  border-bottom: 2px solid #4A6670;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+.input:focus {
+  border: transparent;
+  border-bottom: 2px solid #4A6670;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+.check-icon {
+  padding-bottom: 20px;
 }

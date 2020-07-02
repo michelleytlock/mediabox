@@ -16,7 +16,7 @@ class Home extends Component {
     randomMediaType: "",
     list: [],
     mediaPage: "movie",
-    recommendedState: true
+    recommendedState: true,
   };
 
   componentDidMount() {
@@ -65,7 +65,6 @@ class Home extends Component {
 
         console.log(objResults)
         this.props.handleSearchProps(objResults)
-        this.props.history.push('/search')
       })
       .catch((err) => {
         console.log("search err" + err);
@@ -83,16 +82,25 @@ class Home extends Component {
       return media.mediaType === this.state.mediaPage;
     });
 
+    // console.log(ratedMediaType)
+
+    // FILTER THROUGH TO FIND RATING FROM 3-5
+    let likedMedia = ratedMediaType.filter((media) => {
+      return media.rating === 3 || media.rating === 4 || media.rating === 5
+    })
+
+    // console.log(likedMedia)
     // console.log(this.state.mediaPage);
     // console.log(ratedMediaType);
     // console.log(this.state.recommendedState);
 
     let randomRatedMediaIndex = Math.floor(
-      Math.random() * ratedMediaType.length
+      Math.random() * likedMedia.length
     );
 
-    let randomRatedMedia = ratedMediaType[randomRatedMediaIndex];
-
+    let randomRatedMedia = likedMedia[randomRatedMediaIndex];
+    console.log(randomRatedMediaIndex)
+    console.log(likedMedia.length)
     console.log(randomRatedMedia)
 
     axios
@@ -105,19 +113,29 @@ class Home extends Component {
           return media.poster_path;
         });
 
-        let randomResultsIndex = Math.floor(Math.random() * results.length);
+        let filterForRepeats = results.filter((media) => {
+          let check = true;
+          this.state.list.forEach((element) => {
+            if (media.id === element.apiId) {
+              check = false
+            }
+          })
+          return check
+        })
+
+        let randomResultsIndex = Math.floor(Math.random() * filterForRepeats.length);
 
         // console.log(randomResultsIndex);
         console.log(
           "This is recommended random media ",
-          results[randomResultsIndex]
+          filterForRepeats[randomResultsIndex]
         );
 
         // window.localStorage.setItem("media", JSON.stringify(results[randomResultsIndex]));
         // window.localStorage.setItem("type", this.state.mediaPage);
         this.setState({
           recommendedState: true,
-          randomMedia: results[randomResultsIndex],
+          randomMedia: filterForRepeats[randomResultsIndex],
           randomMediaType: this.state.mediaPage,
         });
       })
@@ -137,8 +155,12 @@ class Home extends Component {
           return media.poster_path;
         });
 
+        console.log(results)
+
         let randomResultsIndex = Math.floor(Math.random() * results.length);
+
         console.log("This is trending media ", results[randomResultsIndex]);
+
         this.setState({
           recommendedState: false,
           randomMedia: results[randomResultsIndex],
@@ -146,7 +168,7 @@ class Home extends Component {
         });
       })
       .catch((err) => {
-        console.log("gettrending err" + err);
+        console.log("get trending err" + err);
       });
   };
 
@@ -174,8 +196,6 @@ class Home extends Component {
       .then((response) => {
         console.log(response.data.list);
 
-        // FIX RATED MOVIES RENDERING AGAIN HERE
-
         // window.localStorage.removeItem("media");
         this.setState(
           {
@@ -184,7 +204,7 @@ class Home extends Component {
             randomMediaType: "",
           },
           () => {
-            this.recommendedState
+            this.state.recommendedState
               ? this.getRandomMedia()
               : this.getTrendingMedia();
           }
@@ -221,7 +241,7 @@ class Home extends Component {
             randomMediaType: "",
           },
           () => {
-            this.recommendedState
+            this.state.recommendedState
               ? this.getRandomMedia()
               : this.getTrendingMedia();
           }
@@ -258,7 +278,7 @@ class Home extends Component {
             randomMediaType: "",
           },
           () => {
-            this.recommendedState
+            this.state.recommendedState
               ? this.getRandomMedia()
               : this.getTrendingMedia();
           }
@@ -269,7 +289,8 @@ class Home extends Component {
       });
   };
 
-  handleToggleMovie = () => {
+  handleToggleMovie = (e) => {
+
     this.setState(
       {
         mediaPage: "movie",
@@ -278,7 +299,8 @@ class Home extends Component {
     );
   };
 
-  handleToggleTV = () => {
+  handleToggleTV = (e) => {
+
     this.setState(
       {
         mediaPage: "tv",
@@ -298,11 +320,11 @@ class Home extends Component {
 
     return (
       <div className="home-page">
-        <MediaFilter
+        <MediaFilter mediaType={this.state.mediaPage} 
           onMovieChange={this.handleToggleMovie}
           onTVChange={this.handleToggleTV}
         />
-        <Filter
+        <Filter recommendedState={this.state.recommendedState}
           type={type}
           trending={this.getTrendingMedia}
           recommended={this.getRandomMedia}

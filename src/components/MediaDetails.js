@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import Icon from "@mdi/react";
+import { mdiKeyboardBackspace } from "@mdi/js";
 import config from "../config";
 import axios from "axios";
+import { withRouter } from "react-router-dom";
 
 let photoPath = "https://image.tmdb.org/t/p/w500/";
 
@@ -15,13 +18,15 @@ class MediaDetails extends Component {
   componentDidMount() {
     let id = this.props.computedMatch.params.id;
     let mediaType = this.props.computedMatch.params.mediaType;
+    console.log(this.props.location);
+    console.log(this.props.location.state.fromPage);
 
     axios
       .get(`${config.API_URL}/getDetails/${mediaType}/${id}`, {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         this.setState({
           id,
           mediaType,
@@ -59,10 +64,39 @@ class MediaDetails extends Component {
         { withCredentials: true }
       )
       .then((response) => {
-        this.props.history.goBack();
+        if (this.props.location.state.fromPage === "search") {
+          this.props.history.push("/home");
+        } else {
+          this.props.history.goBack();
+        }
       })
       .catch((err) => {
         console.log("create media err" + err);
+      });
+  };
+
+  handleSave = () => {
+    axios
+      .post(
+        `${config.API_URL}/create`,
+        {
+          mediaType: this.state.mediaType,
+          apiId: this.state.media.id,
+          listType: "watchlist",
+          description: this.state.media.overview,
+          image: this.state.media.poster_path,
+          title:
+            this.state.mediaType === "movie"
+              ? this.state.media.title
+              : this.state.media.name,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        this.props.history.goBack();
+      })
+      .catch((err) => {
+        console.log("skip err" + err);
       });
   };
 
@@ -87,7 +121,7 @@ class MediaDetails extends Component {
         this.props.history.goBack();
       })
       .catch((err) => {
-        console.log("skip err" + err);
+        console.log("create media err" + err);
       });
   };
 
@@ -121,154 +155,234 @@ class MediaDetails extends Component {
     console.log(this.state.media);
 
     return (
-      <>
-        <button
-          onClick={this.handleBack}
-          className="button is-primary is-light"
-        >
-          Back
-        </button>
-        <div className="columns is-mobile">
-          <div className="column">
-            <button
-              onClick={this.handleRate}
-              className="button is-primary is-rounded"
-            >
-              1
-            </button>
-          </div>
-          <div className="column">
-            <button
-              onClick={this.handleRate}
-              className="button is-primary is-rounded"
-            >
-              2
-            </button>
-          </div>
-          <div className="column">
-            <button
-              onClick={this.handleRate}
-              className="button is-primary is-rounded"
-            >
-              3
-            </button>
-          </div>
-          <div className="column">
-            <button
-              onClick={this.handleRate}
-              className="button is-primary is-rounded"
-            >
-              4
-            </button>
-          </div>
-          <div className="column">
-            <button
-              onClick={this.handleRate}
-              className="button is-primary is-rounded"
-            >
-              5
-            </button>
-          </div>
+      <div className="media-details-page">
+        <div className="media-details-header">
+          <button onClick={this.handleBack} className="back-button">
+            <Icon path={mdiKeyboardBackspace} size={1.5} color="#e20f0f" />
+          </button>
+          <h5 className="subtitle is-5 header-type">Details</h5>
         </div>
-        <button
-          onClick={this.handleSkip}
-          className="button is-primary is-rounded"
-        >
-          Remove from Watchlist
-        </button>
+
         {this.state.mediaType === "movie" ? (
-          <div>
-            <img src={photoPath + backdrop_path} alt={title} />
-            <h2 className="title is-2">{title}</h2>
-            <p>{tagline}</p>
-            <p>{release_date}</p>
-            <p>{runtime}</p>
-            <p>{overview}</p>
+          <>
+            <img
+              className="backdrop-image"
+              src={photoPath + backdrop_path}
+              alt={title}
+            />
+            <div className="media-details">
+              <h2 className="title is-2">{title}</h2>
+              <h5 className="subtitle is-5">{tagline}</h5>
+              <p className="media-details-text">
+                <strong>Release Date:</strong> {release_date}
+              </p>
+              <p className="media-details-text">
+                <strong>Runtime: </strong> {runtime}
+              </p>
+              <p className="media-details-text">
+                <strong>Overview:</strong>
+                <br />
+                {overview}
+              </p>
 
-            {genres &&
-              genres.map((genre, index) => {
-                return (
-                  <h5 key={index} className="subtitle is-5">
-                    {genre.name}
-                  </h5>
-                );
-              })}
-
-            <h3 className="subtitle is-3">Details</h3>
-            <div>
-              {cast &&
-                cast.slice(0, 4).map((castMem, index) => {
+              <p className="media-details-text">
+                <strong>Genres:</strong>
+              </p>
+              {genres &&
+                genres.map((genre, index) => {
                   return (
-                    <div key={index}>
-                      <img src={photoPath + castMem.profile_path} alt={title} />
-                      <h5 className="subtitle is-5">
-                        {castMem.name} as {castMem.character}
-                      </h5>
-                    </div>
+                    <p key={index} className="media-details-text">
+                      {genre.name}
+                    </p>
                   );
                 })}
-            </div>
-            <div>
-              {crew && (
-                <div>
-                  <img src={photoPath + director[0].profile_path} alt={title} />
-                  <h5 className="subtitle is-5">
-                    Director: {director[0].name}
-                  </h5>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div>
-            <img src={photoPath + backdrop_path} alt={name} />
-            <h2 className="title is-2">{name}</h2>
-            <p>{number_of_episodes}</p>
-            <p>{number_of_seasons}</p>
-            <p>{status}</p>
-            <p>{overview}</p>
-            <p>{first_air_date}</p>
-            <p>{last_air_date}</p>
-            {genres &&
-              genres.map((genre, index) => {
-                return (
-                  <h5 key={index} className="subtitle is-5">
-                    {genre.name}
-                  </h5>
-                );
-              })}
-            <h3 className="subtitle is-3">Details</h3>
-            {created_by && (
-              <div>
-                {created_by[0].profile_path && (
-                  <img
-                    src={photoPath + created_by[0].profile_path}
-                    alt={created_by[0].name}
-                  />
+
+              <div className="cast">
+                <h5 className="title is-5">Director</h5>
+                {crew && (
+                  <div className="cast-details">
+                    <img
+                      className="cast-image"
+                      src={photoPath + director[0].profile_path}
+                      alt={title}
+                    />
+                    <p className="media-details-text">{director[0].name}</p>
+                  </div>
                 )}
-                <h5 className="subtitle is-5">
-                  Created By: {created_by[0].name}
-                </h5>
               </div>
-            )}
-            <div>
-              {cast &&
-                cast.slice(0, 4).map((castMem, index) => {
+              <div className="cast">
+                <h5 className="title is-5">Cast</h5>
+                {cast &&
+                  cast.slice(0, 4).map((castMem, index) => {
+                    return (
+                      <div className="cast-details" key={index}>
+                        <img
+                          className="cast-image"
+                          src={photoPath + castMem.profile_path}
+                          alt={title}
+                        />
+                        <p className="media-details-text">
+                          <strong>{castMem.name}</strong> as {castMem.character}
+                        </p>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <img
+              className="backdrop-image"
+              src={photoPath + backdrop_path}
+              alt={name}
+            />
+            <div className="media-details">
+              <h2 className="title is-2">{name}</h2>
+              <p className="media-details-text">
+                <strong>Number of Episodes: </strong>
+                {number_of_episodes}
+              </p>
+              <p className="media-details-text">
+                <strong>Number of Seasons: </strong>
+                {number_of_seasons}
+              </p>
+              <p className="media-details-text">
+                <strong>Current Status: </strong>
+                {status}
+              </p>
+              <p className="media-details-text">
+                <strong>First Air Date: </strong>
+                {first_air_date}
+              </p>
+              <p className="media-details-text">
+                <strong>Last Air Date: </strong>
+                {last_air_date}
+              </p>
+              <p className="media-details-text">
+                <strong>Overview: </strong>
+                <br />
+                {overview}
+              </p>
+
+              <p className="media-details-text">
+                <strong>Genres:</strong>
+              </p>
+              {genres &&
+                genres.map((genre, index) => {
                   return (
-                    <div key={index}>
-                      <img src={photoPath + castMem.profile_path} alt={title} />
-                      <h5 className="subtitle is-5">
-                        {castMem.name} as {castMem.character}
-                      </h5>
-                    </div>
+                    <p key={index} className="media-details-text">
+                      {genre.name}
+                    </p>
                   );
                 })}
+              <div className="cast">
+                <h5 className="title is-5">Created By:</h5>
+                {created_by && (
+                  <div className="cast-details">
+                    {created_by[0].profile_path && (
+                      <img
+                        className="cast-image"
+                        src={photoPath + created_by[0].profile_path}
+                        alt={created_by[0].name}
+                      />
+                    )}
+                    <p className="media-details-text">{created_by[0].name}</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="cast">
+                <h5 className="title is-5">Cast</h5>
+                {cast &&
+                  cast.slice(0, 4).map((castMem, index) => {
+                    return (
+                      <div className="cast-details" key={index}>
+                        <img
+                          className="cast-image"
+                          src={photoPath + castMem.profile_path}
+                          alt={title}
+                        />
+                        <p className="media-details-text">
+                          <strong>{castMem.name}</strong> as {castMem.character}
+                        </p>
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
-          </div>
+          </>
         )}
-      </>
+
+        <div className="media-details-control">
+          {this.props.location.state.fromPage === "home" ||
+          this.props.location.state.fromPage === "search" ? (
+            <h4 className="title is-4">Rate or Add to Watchlist</h4>
+          ) : this.props.location.state.fromPage === "watchlist" ? (
+            <h4 className="title is-4">Rate or Remove from Watchlist</h4>
+          ) : (
+            ""
+          )}
+          {this.props.location.state.fromPage === "home" ||
+          this.props.location.state.fromPage === "search" ||
+          this.props.location.state.fromPage === "watchlist" ? (
+            <div className="rating-buttons">
+              <button
+                onClick={this.handleRate}
+                className="button is-primary circle-buttons"
+              >
+                1
+              </button>
+              <button
+                onClick={this.handleRate}
+                className="button is-primary circle-buttons"
+              >
+                2
+              </button>
+              <button
+                onClick={this.handleRate}
+                className="button is-primary circle-buttons"
+              >
+                3
+              </button>
+              <button
+                onClick={this.handleRate}
+                className="button is-primary circle-buttons"
+              >
+                4
+              </button>
+              <button
+                onClick={this.handleRate}
+                className="button is-primary circle-buttons"
+              >
+                5
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
+          {this.props.location.state.fromPage === "home" ||
+          this.props.location.state.fromPage === "search" ? (
+            <button
+              onClick={this.handleSave}
+              className="button is-rounded is-fullwidth"
+            >
+              Add to Watchlist
+            </button>
+          ) : this.props.location.state.fromPage === "watchlist" ? (
+            <button
+              onClick={this.handleSkip}
+              className="button is-rounded is-fullwidth"
+            >
+              Remove from Watchlist
+            </button>
+          ) : (
+            ""
+          )}
+        </div>
+      </div>
     );
   }
 }
 
-export default MediaDetails;
+export default withRouter(MediaDetails);

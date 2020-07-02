@@ -1,7 +1,6 @@
 import React from "react";
 import FadeIn from "react-fade-in";
 import Lottie from "react-lottie";
-import ReactLoading from "react-loading";
 import loadingData from "../loadingAnimation.json";
 import { Link } from "react-router-dom";
 
@@ -13,7 +12,7 @@ export default class LandingPage extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({ done: true });
-    }, 50000);
+    }, 3000);
   }
 
   render() {
@@ -31,11 +30,10 @@ export default class LandingPage extends React.Component {
       <>
         {!this.state.done ? (
           <div className="loading">
-            <FadeIn>
+            <FadeIn className="loading-animation">
               <h1 className="logo">MediaBox</h1>
-              <Lottie options={defaultOptions} height={120} width={120} />
+              <Lottie options={defaultOptions} height={250} width={250} />
             </FadeIn>
-            <ReactLoading type={"spin"} color={"white"} />
           </div>
         ) : (
           <div className="landing">
