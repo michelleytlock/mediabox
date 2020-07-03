@@ -1,9 +1,7 @@
 import React from "react";
 
 export default function Filter(props) {
-  let placeholder =
-    props.type === "movie" ? "Search movies..." : "Search tv shows...";
-
+  
   return (
     <div className="main-filter">
       <form className="search-filter" onSubmit={props.onSearch}>
@@ -11,7 +9,7 @@ export default function Filter(props) {
           className="input searchbar"
           name="search"
           type="text"
-          placeholder={placeholder}
+          placeholder="Search..."
         />
         <button className="button is-primary is-rounded" type="submit">
           Search
