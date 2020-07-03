@@ -4,7 +4,7 @@
 
 ## Description
 
-MediaBox is an app that provides users with recommendations on what movies and tv shows to watch, based on users' preferences and ratings on what they have watched already.
+MediaBox is an app that provides users with recommendations on what movies and tv shows to watch, based on users' preferences and ratings.
 
 ## Core Features
 
