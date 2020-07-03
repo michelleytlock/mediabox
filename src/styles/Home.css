@@ -193,6 +193,65 @@ $black: #00000A; */
   color: #e20f0f;
 }
 
+.search-subhead {
+  font-weight: 900;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.search-people {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.search-person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+  text-align: center;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+.search-person img {
+  object-fit: cover;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  margin-bottom: 5px;
+}
+
+.search-person-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-profile-pic {
+  border-radius: 50%;
+  height: 150px;
+  width: 150px;
+  object-fit: cover;
+}
+
+.no-results-page {
+  margin: 80px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-results-page h5 {
+  width: 80%;
+  text-align: center;
+}
+
+
 /* MEDIA DETAILS */
 .media-details-page {
   display: flex;

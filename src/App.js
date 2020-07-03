@@ -19,6 +19,7 @@ import Profile from "./components/Profile";
 import Watchlist from "./components/Watchlist";
 import MediaDetails from "./components/MediaDetails";
 import SearchResults from "./components/SearchResults";
+import PersonDetails from "./components/PersonDetails";
 
 class App extends Component {
 
@@ -160,6 +161,10 @@ class App extends Component {
             path="/search"
             component={SearchResults}
             list={this.state.searchResults}
+          />
+          <PrivateRoute
+            exact path="/person"
+            component={PersonDetails}
           />
         </Switch>
       </div>

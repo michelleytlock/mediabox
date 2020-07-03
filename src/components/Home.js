@@ -54,13 +54,21 @@ class Home extends Component {
       .then((res) => {
         console.log(res.data)
 
-        let results = res.data.filter((media) => {
-          return media.poster_path;
+        let people = res.data.filter((result) => {
+          return result.media_type === "person" && result.profile_path
+        })
+
+        let movies = res.data.filter((media) => {
+          return media.media_type === "movie" && media.poster_path
         });
 
+        let tv = res.data.filter((media) => {
+          return media.media_type === "tv" && media.poster_path
+        })
+
         let objResults = {
-          results: results,
-          mediaPage: this.state.mediaPage
+          people, movies, tv
+          // mediaPage: this.state.mediaPage
         }
 
         console.log(objResults)

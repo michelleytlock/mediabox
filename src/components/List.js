@@ -15,6 +15,7 @@ export default function List(props) {
   return (
       <div className="list">
       {list.map((media, index) => {
+        console.log(media)
         let image = '';
         let title = '';
         let id = 0;
@@ -26,6 +27,8 @@ export default function List(props) {
         media.title || media.name ? title = title : title = media.mediaId.title
 
         media.id ? id = media.id : id = media.apiId
+
+        media.media_type ? type = media.media_type : type = type
 
           return (
             <div key={index} className="list-item">
