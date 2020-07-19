@@ -153,7 +153,8 @@ class MediaDetails extends Component {
     }
 
     console.log(this.state.media);
-
+    console.log('Createdby', created_by)
+    let createdBy = Array.isArray(created_by) ? !!created_by.length : !!created_by
     return (
       <div className="media-details-page">
         <div className="media-details-header">
@@ -278,7 +279,7 @@ class MediaDetails extends Component {
                 })}
               <div className="cast">
                 <h5 className="title is-5">Created By:</h5>
-                {created_by && (
+                {createdBy && (
                   <div className="cast-details">
                     {created_by[0].profile_path && (
                       <img

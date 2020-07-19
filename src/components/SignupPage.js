@@ -6,6 +6,7 @@ import { mdiCheck } from "@mdi/js";
 import { mdiAlertCircle } from "@mdi/js";
 
 export default function SignupPage(props) {
+  console.log('Signup, ', props.usernameStatus)
   return (
     <div className="signup-page">
       <button className="close-button">
@@ -30,7 +31,7 @@ export default function SignupPage(props) {
                 name="username"
                 placeholder="moaningmyrtle"
               />
-              {props.usernameStatus === undefined ? (
+              {props.usernameStatus == 'undefined' ? (
                 ""
               ) : props.usernameStatus === true ? (
                 <span className="icon is-small is-right check-icon">
@@ -42,7 +43,7 @@ export default function SignupPage(props) {
                 </span>
               )}
             </p>
-            {props.usernameStatus === undefined ? (
+            {props.usernameStatus == 'undefined' ? (
               ""
             ) : props.usernameStatus === true ? (
               <p class="help is-danger">
@@ -66,7 +67,7 @@ export default function SignupPage(props) {
                 name="email"
                 placeholder="myrtle@girlsbathroom.com"
               />
-              {props.emailStatus === undefined ? (
+              {props.emailStatus == 'undefined' ? (
                 ""
               ) : props.emailStatus === true ? (
                 <span className="icon is-small is-right check-icon">
@@ -78,7 +79,7 @@ export default function SignupPage(props) {
                 </span>
               )}
             </p>
-            {props.emailStatus === undefined ? (
+            {props.emailStatus == 'undefined' ? (
               ""
             ) : props.emailStatus === true ? (
               <p class="help is-danger">

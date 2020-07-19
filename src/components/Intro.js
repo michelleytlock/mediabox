@@ -9,6 +9,7 @@ import Onboarding from "./Onboarding";
 import Home from "./Home";
 
 class Intro extends Component {
+  
   state = {
     user: this.props.loggedInUser,
     randomMedia: "",

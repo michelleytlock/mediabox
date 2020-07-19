@@ -4,6 +4,7 @@ export default function Filter(props) {
   
   return (
     <div className="main-filter">
+      {/* SEARCH BAR */}
       <form className="search-filter" onSubmit={props.onSearch}>
         <input
           className="input searchbar"
@@ -15,6 +16,8 @@ export default function Filter(props) {
           Search
         </button>
       </form>
+
+      {/* RECOMMENDED BUTTON */}
       <div className="random-medias-toggler">
         <button
           onClick={props.recommended}
@@ -26,6 +29,8 @@ export default function Filter(props) {
         >
           Recommended
         </button>
+        
+        {/* TRENDING BUTTON */}
         <button
           onClick={props.trending}
           className={

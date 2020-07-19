@@ -2,24 +2,28 @@ import React, { Component } from "react";
 import config from "../config";
 import axios from "axios";
 
+// COMPONENTS
 import MediaFilter from "./MediaFilter";
 import Navbar from "./Navbar";
 import HomeRater from "./HomeRater";
 import Filter from "./Filter";
 
+// STYLES 
 import "../styles/Home.css";
 
 class Home extends Component {
+
   state = {
-    user: this.props.loggedInUser,
+    user: this.props.loggedInUser, // Session user
     randomMedia: "",
     randomMediaType: "",
-    list: [],
-    mediaPage: "movie",
-    recommendedState: true,
+    list: [], // User's list
+    mediaPage: "movie", // Default is movie
+    recommendedState: true, // Default will show recommended movies
   };
 
   componentDidMount() {
+    // Call to server to get most updated user list
     axios
       .get(`${config.API_URL}/userData`, { withCredentials: true })
       .then((res) => {
@@ -28,11 +32,10 @@ class Home extends Component {
             list: res.data.list,
           },
           () => {
-            // console.log("CDM");
             // if (!window.localStorage.getItem("media")) {
             //   this.getRandomMedia();
             // }
-            this.getRandomMedia();
+            this.getRandomMedia(); // Get random media immediately during component mounting
           }
         );
       })
@@ -41,18 +44,17 @@ class Home extends Component {
       });
   }
 
+  // This method handles the search functionality
   handleSearch = (e) => {
     e.preventDefault();
     
-    console.log(e.target.search.value);
-    console.log(this.props.history)
-
+    // Sends search input to server to handle the external API search call (external api call does not work on client side so have to do from server side)
     axios
-      .get(`${config.API_URL}/${this.state.mediaPage}/${e.target.search.value}/searchresults`, {
+      .get(`${config.API_URL}/${e.target.search.value}/searchresults`, {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res.data)
+        // res.data might include people, movies and/or tv
 
         let people = res.data.filter((result) => {
           return result.media_type === "person" && result.profile_path
@@ -66,12 +68,12 @@ class Home extends Component {
           return media.media_type === "tv" && media.poster_path
         })
 
+        // Combine all into one results object
         let objResults = {
           people, movies, tv
-          // mediaPage: this.state.mediaPage
         }
 
-        console.log(objResults)
+        // Send to App component to pass to /search route
         this.props.handleSearchProps(objResults)
       })
       .catch((err) => {
@@ -79,48 +81,43 @@ class Home extends Component {
       });
   };
 
+  // This method generates a random recommended movie or tv show
   getRandomMedia = () => {
-    // FILTER THROUGH LIST TO FIND "RATED" MEDIAS
+    // Filter through list to get media already rated (so that something random based on rated movies/tv shows can be called)
     let allRated = this.state.list.filter((media) => {
       return media.listType === "rated";
     });
 
-    // FILTER THROUGH LIST TO FIND THE CORRECT TYPE (MOVIE/TV)
+    // Filter for correct media type
     let ratedMediaType = allRated.filter((media) => {
       return media.mediaType === this.state.mediaPage;
     });
 
-    // console.log(ratedMediaType)
-
-    // FILTER THROUGH TO FIND RATING FROM 3-5
+    // Filter to find only 3, 4, 5 ratings
     let likedMedia = ratedMediaType.filter((media) => {
       return media.rating === 3 || media.rating === 4 || media.rating === 5
     })
 
-    // console.log(likedMedia)
-    // console.log(this.state.mediaPage);
-    // console.log(ratedMediaType);
-    // console.log(this.state.recommendedState);
-
+    // Random index number
     let randomRatedMediaIndex = Math.floor(
       Math.random() * likedMedia.length
     );
 
+    // Random rated movie/tv show
     let randomRatedMedia = likedMedia[randomRatedMediaIndex];
-    console.log(randomRatedMediaIndex)
-    console.log(likedMedia.length)
-    console.log(randomRatedMedia)
 
+    // Call to external API to get media related to randomRatedMedia
     axios
       .get(
         `https://api.themoviedb.org/3/${this.state.mediaPage}/${randomRatedMedia.apiId}/recommendations?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`
       )
       .then((res) => {
-        // console.log(res.data.total_pages)
+        // Only return results with a poster image
         let results = res.data.results.filter((media) => {
           return media.poster_path;
         });
 
+        // Only return new results that haven't already been rated, skipped or watchlisted
         let filterForRepeats = results.filter((media) => {
           let check = true;
           this.state.list.forEach((element) => {
@@ -131,16 +128,12 @@ class Home extends Component {
           return check
         })
 
+        // Random index number
         let randomResultsIndex = Math.floor(Math.random() * filterForRepeats.length);
-
-        // console.log(randomResultsIndex);
-        console.log(
-          "This is recommended random media ",
-          filterForRepeats[randomResultsIndex]
-        );
 
         // window.localStorage.setItem("media", JSON.stringify(results[randomResultsIndex]));
         // window.localStorage.setItem("type", this.state.mediaPage);
+
         this.setState({
           recommendedState: true,
           randomMedia: filterForRepeats[randomResultsIndex],
@@ -152,26 +145,36 @@ class Home extends Component {
       });
   };
 
+  // This method generates a random trending movie or tv show
   getTrendingMedia = () => {
-    console.log(this.state.recommendedState);
+    // External API call to get list of trending movies or tv shows
     axios
       .get(
         `https://api.themoviedb.org/3/trending/${this.state.mediaPage}/day?api_key=${process.env.REACT_APP_API_KEY}`
       )
       .then((res) => {
+        // Only return results with a poster image
         let results = res.data.results.filter((media) => {
           return media.poster_path;
         });
 
-        console.log(results)
+        // Only return new results that haven't already been rated, skipped or watchlisted
+        let filterForRepeats = results.filter((media) => {
+          let check = true;
+          this.state.list.forEach((element) => {
+            if (media.id === element.apiId) {
+              check = false
+            }
+          })
+          return check
+        })
 
+        // Random index number
         let randomResultsIndex = Math.floor(Math.random() * results.length);
-
-        console.log("This is trending media ", results[randomResultsIndex]);
 
         this.setState({
           recommendedState: false,
-          randomMedia: results[randomResultsIndex],
+          randomMedia: filterForRepeats[randomResultsIndex],
           randomMediaType: this.state.mediaPage,
         });
       })
@@ -180,9 +183,11 @@ class Home extends Component {
       });
   };
 
+  // This method handles the rating functionality
   handleRate = (e) => {
-    let rating = e.target.innerHTML;
-    console.log(this.state.recommendedState);
+    let rating = e.target.innerHTML; // Rating of 1, 2, 3, 4, or 5
+    
+    // Call to server that handles media (adds to database, adds to user's list with listType = "rated" and a rating)
     axios
       .post(
         `${config.API_URL}/create`,
@@ -196,14 +201,12 @@ class Home extends Component {
           title:
             this.state.randomMediaType === "movie"
               ? this.state.randomMedia.title
-              : this.state.randomMedia.name,
+              : this.state.randomMedia.name, // Different due to external API calling it different based on whether media is movie or tv show
           genres: this.state.randomMedia.genres
         },
         { withCredentials: true }
       )
       .then((response) => {
-        console.log(response.data.list);
-
         // window.localStorage.removeItem("media");
         this.setState(
           {
@@ -223,7 +226,9 @@ class Home extends Component {
       });
   };
 
+  // This method handles the skipping functionality
   handleSkip = () => {
+    // Call to server that handles media (adds to database, adds to user's list with listType = "skipped") 
     axios
       .post(
         `${config.API_URL}/create`,
@@ -236,12 +241,11 @@ class Home extends Component {
           title:
             this.state.randomMediaType === "movie"
               ? this.state.randomMedia.title
-              : this.state.randomMedia.name,
+              : this.state.randomMedia.name, // Different due to external API calling it different based on whether media is movie or tv show
         },
         { withCredentials: true }
       )
       .then((response) => {
-        console.log(response.data.list);
         this.setState(
           {
             list: response.data.list,
@@ -260,7 +264,9 @@ class Home extends Component {
       });
   };
 
+  // This method handles the watchlist functionality
   handleSave = () => {
+    // Call to server that handles media (adds to database, adds to user's list with listType = "watchlist") 
     axios
       .post(
         `${config.API_URL}/create`,
@@ -273,12 +279,11 @@ class Home extends Component {
           title:
             this.state.randomMediaType === "movie"
               ? this.state.randomMedia.title
-              : this.state.randomMedia.name,
+              : this.state.randomMedia.name, // Different due to external API calling it different based on whether media is movie or tv show
         },
         { withCredentials: true }
       )
       .then((response) => {
-        console.log(response.data.list);
         this.setState(
           {
             list: response.data.list,
@@ -297,6 +302,7 @@ class Home extends Component {
       });
   };
 
+  // This method toggles the mediaPage state to "movie"
   handleToggleMovie = (e) => {
 
     this.setState(
@@ -307,6 +313,7 @@ class Home extends Component {
     );
   };
 
+  // This method toggles the mediaPage state to "tv"
   handleToggleTV = (e) => {
 
     this.setState(
