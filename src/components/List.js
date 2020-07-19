@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 let photoPath = "https://image.tmdb.org/t/p/w500/";
 
 export default function List(props) {
-  console.log(props.list);
   let list = [];
   let type = '';
 
+  //Changes depending on where List is being called (might be Search Results, PersonDetails, Profile or Watchlist)
   props.list.results ? list = props.list.results : list = props.list
 
   props.list.mediaPage ? type = props.list.mediaPage : type = props.type
@@ -15,7 +15,7 @@ export default function List(props) {
   return (
       <div className="list">
       {list.map((media, index) => {
-        console.log(media)
+
         let image = '';
         let title = '';
         let id = 0;

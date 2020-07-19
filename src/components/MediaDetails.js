@@ -18,15 +18,13 @@ class MediaDetails extends Component {
   componentDidMount() {
     let id = this.props.computedMatch.params.id;
     let mediaType = this.props.computedMatch.params.mediaType;
-    console.log(this.props.location);
-    console.log(this.props.location.state.fromPage);
 
+    // Call to server to get details about media
     axios
       .get(`${config.API_URL}/getDetails/${mediaType}/${id}`, {
         withCredentials: true,
       })
       .then((res) => {
-        // console.log(res.data);
         this.setState({
           id,
           mediaType,
@@ -39,13 +37,16 @@ class MediaDetails extends Component {
       });
   }
 
+  // This method handles the back button
   handleBack = () => {
     this.props.history.goBack();
   };
 
+  // This method handles the rating functionality
   handleRate = (e) => {
-    let rating = e.target.innerHTML;
+    let rating = e.target.innerHTML; // Rating of 1, 2, 3, 4, or 5
 
+    // Call to server that handles media (adds to database, adds to user's list with listType = "rated" and a rating)
     axios
       .post(
         `${config.API_URL}/create`,
@@ -59,7 +60,7 @@ class MediaDetails extends Component {
           title:
             this.state.mediaType === "movie"
               ? this.state.media.title
-              : this.state.media.name,
+              : this.state.media.name, // Different due to external API calling it different based on whether media is movie or tv show
         },
         { withCredentials: true }
       )
@@ -75,7 +76,9 @@ class MediaDetails extends Component {
       });
   };
 
+  // This method handles the add to watchlist functionality
   handleSave = () => {
+    // Call to server that handles media (adds to database, adds to user's list with listType = "watchlist")
     axios
       .post(
         `${config.API_URL}/create`,
@@ -88,7 +91,7 @@ class MediaDetails extends Component {
           title:
             this.state.mediaType === "movie"
               ? this.state.media.title
-              : this.state.media.name,
+              : this.state.media.name, // Different due to external API calling it different based on whether media is movie or tv show
         },
         { withCredentials: true }
       )
@@ -100,7 +103,9 @@ class MediaDetails extends Component {
       });
   };
 
+  // This method handles the skipping functionality
   handleSkip = () => {
+    // Call to server that handles media (adds to database, adds to user's list with listType = "skipped")
     axios
       .post(
         `${config.API_URL}/create`,
@@ -113,7 +118,7 @@ class MediaDetails extends Component {
           title:
             this.state.mediaType === "movie"
               ? this.state.media.title
-              : this.state.media.name,
+              : this.state.media.name, // Different due to external API calling it different based on whether media is movie or tv show
         },
         { withCredentials: true }
       )
@@ -144,17 +149,16 @@ class MediaDetails extends Component {
     } = this.state.media;
 
     const { cast, crew } = this.state.credits;
+    
     let director;
-
     if (crew) {
       director = crew.filter((crewMem) => {
         return crewMem.job === "Director";
       });
     }
 
-    console.log(this.state.media);
-    console.log('Createdby', created_by)
     let createdBy = Array.isArray(created_by) ? !!created_by.length : !!created_by
+    
     return (
       <div className="media-details-page">
         <div className="media-details-header">

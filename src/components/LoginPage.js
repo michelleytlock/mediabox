@@ -40,7 +40,7 @@ export default function LoginPage(props) {
               placeholder="***********"
             />
           </div>
-
+          {/* ERROR MESSAGE */}
           {props.logInStatus && <div class="notification is-danger is-light">
             Something went wrong. Please make sure your <strong>email</strong> is correct and your <strong>password</strong> has at least 8 characters, 1 number and 1 uppercase alphabet.
           </div>}

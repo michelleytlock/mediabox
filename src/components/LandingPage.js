@@ -16,7 +16,7 @@ export default class LandingPage extends React.Component {
   }
 
   render() {
-    console.log(loadingData)
+    // Animation options
     const defaultOptions = {
       loop: true,
       autoplay: true,

@@ -9,6 +9,7 @@ let photoPath = "https://image.tmdb.org/t/p/w500/";
 export default function HomeRater(props) {
   let imageSrc = photoPath + props.random.poster_path;
 
+  //Animation options:
   const defaultOptions = {
     loop: true,
     autoplay: true,

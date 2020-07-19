@@ -8,21 +8,22 @@ import loadingData from "../pageLoadingAnimation.json";
 import Onboarding from "./Onboarding";
 import Home from "./Home";
 
+// This component makes user go through onboarding flow or skip straight to homepage
 class Intro extends Component {
-  
+
   state = {
-    user: this.props.loggedInUser,
+    user: this.props.loggedInUser, // Session user
     randomMedia: "",
     randomMediaType: "",
-    list: [],
+    list: [], // User's list
     dataFetched: false,
   };
 
   componentDidMount() {
+    // Call to server to get most updated user list
     axios
       .get(`${config.API_URL}/userData`, { withCredentials: true })
       .then((res) => {
-        // console.log(this.props)
         this.setState({
           list: res.data.list,
           dataFetched: true,
@@ -30,12 +31,15 @@ class Intro extends Component {
 
         let rated = [];
 
+        // If user's list is not empty
         if (this.state.list.length !== 0) {
+          // Filter only rated medias
           rated = this.state.list.filter((media) => {
             return (media.listType = "rated");
           });
         }
 
+        // If there are less than 10 rated movies or tv shows, get another random media for the onboarding flow
         if (rated.length < 10) {
           this.getRandomMedia();
         }
@@ -48,23 +52,26 @@ class Intro extends Component {
       });
   }
 
+  // This method generates a random recommended movie or tv show
   getRandomMedia = () => {
-    console.log("get random media console log");
+    // Random Number to randomize media type
     let random = Math.floor(Math.random() * 2);
     let mediaType;
 
     random === 1 ? (mediaType = "movie") : (mediaType = "tv");
 
+    // External API call to get list of popular movies or tv shows
     axios
       .get(
         `https://api.themoviedb.org/3/${mediaType}/popular?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`
       )
       .then((res) => {
-        console.log(res.data.results);
+        // Only return results with a poster image
         let results = res.data.results.filter((media) => {
           return media.poster_path;
         });
 
+        // Only return new results that haven't already been rated, skipped or watchlisted
         let filterForRepeats = results.filter((media) => {
           let check = true;
           this.state.list.forEach((element) => {
@@ -75,12 +82,8 @@ class Intro extends Component {
           return check;
         });
 
-        console.log(filterForRepeats);
-        console.log(this.state.list);
-
+        // Random index number
         let randomNum = Math.floor(Math.random() * filterForRepeats.length);
-
-        console.log(filterForRepeats[randomNum]);
 
         this.setState({
           randomMedia: filterForRepeats[randomNum],
@@ -92,12 +95,14 @@ class Intro extends Component {
       });
   };
 
+  // This method handles the rating functionality
   handleRate = (e) => {
     e.preventDefault();
-    let rating = e.target.innerHTML;
-    console.log("rating ", rating);
-    // console.log(this.state.randomMediaType);
+    let rating = e.target.innerHTML; // Rating of 1, 2, 3, 4, or 5
+
     const { randomMediaType, randomMedia } = this.state;
+
+    // Call to server that handles media (adds to database, adds to user's list with listType = "rated" and a rating)
     axios
       .post(
         `${config.API_URL}/create`,
@@ -109,13 +114,12 @@ class Intro extends Component {
           description: randomMedia.overview,
           image: randomMedia.poster_path,
           title:
-            randomMediaType === "movie" ? randomMedia.title : randomMedia.name,
+            randomMediaType === "movie" ? randomMedia.title : randomMedia.name, // Different due to external API calling it different based on whether media is movie or tv show
           genres: randomMedia.genre_ids,
         },
         { withCredentials: true }
       )
       .then((response) => {
-        console.log(response.data.list);
 
         this.setState({
           list: response.data.list,
@@ -123,10 +127,12 @@ class Intro extends Component {
           randomMediaType: "",
         });
 
+        // Filter only rated medias
         let rated = this.state.list.filter((media) => {
           return media.listType === "rated";
         });
 
+        // If there are less than 10 rated movies or tv shows, get another random media for the onboarding flow
         if (rated.length < 10) {
           this.getRandomMedia();
         }
@@ -136,9 +142,11 @@ class Intro extends Component {
       });
   };
 
+  // This method handles the skipping functionality
   handleSkip = () => {
-    console.log("skipping");
     const { randomMediaType, randomMedia } = this.state;
+
+    // Call to server that handles media (adds to database, adds to user's list with listType = "skipped")
     axios
       .post(
         `${config.API_URL}/create`,
@@ -149,7 +157,7 @@ class Intro extends Component {
           description: randomMedia.overview,
           image: randomMedia.poster_path,
           title:
-            randomMediaType === "movie" ? randomMedia.title : randomMedia.name,
+            randomMediaType === "movie" ? randomMedia.title : randomMedia.name, // Different due to external API calling it different based on whether media is movie or tv show
           genres: randomMedia.genre_ids,
         },
         { withCredentials: true }
@@ -162,10 +170,12 @@ class Intro extends Component {
             randomMediaType: "",
           },
           () => {
+            // Filter only rated medias
             let rated = this.state.list.filter((media) => {
               return media.listType === "rated";
             });
 
+            // If there are less than 10 rated movies or tv shows, get another random media for the onboarding flow
             if (rated.length < 10) {
               this.getRandomMedia();
             }
@@ -180,10 +190,12 @@ class Intro extends Component {
   render() {
     const { list, dataFetched } = this.state;
 
+    // Filter only rated medias
     let rated = list.filter((media) => {
       return media.listType === "rated";
     });
 
+    // Animation options
     const defaultOptions = {
       loop: true,
       autoplay: true,
@@ -193,6 +205,7 @@ class Intro extends Component {
       },
     };
 
+    // Load animation
     if (!dataFetched) {
       return (
         <div className="loading">
@@ -205,6 +218,7 @@ class Intro extends Component {
 
     return (
       <>
+        {/* If there are less than 10 rated medias, then user should go through onboarding flow */}
         {rated.length < 10 ? (
           <Onboarding
             ratedList={rated}
