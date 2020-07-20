@@ -25,6 +25,7 @@ class Watchlist extends Component {
   };
 
   componentDidMount() {
+    // Call to server to get user's watchlist
     axios
       .get(`${config.API_URL}/watchlist`, { withCredentials: true })
       .then((res) => {
@@ -37,6 +38,7 @@ class Watchlist extends Component {
       });
   }
 
+  // This method toggles the mediaPage state to "movie"
   handleToggleMovie = () => {
     window.localStorage.setItem("mediaPage", "movie");
     this.setState({
@@ -44,6 +46,7 @@ class Watchlist extends Component {
     });
   };
 
+  // This method toggles the mediaPage state to "tv"
   handleToggleTV = () => {
     window.localStorage.setItem("mediaPage", "tv");
     this.setState({

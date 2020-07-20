@@ -11,17 +11,13 @@ import List from "./List";
 let photoPath = "https://image.tmdb.org/t/p/w500/";
 
 class SearchResults extends Component {
-  componentDidMount() {
-    console.log(this.props.list.people);
-    console.log(this.props.list.movies);
-    console.log(this.props.list.tv);
-  }
-
+  // This method handles the back button
   handleBack = () => {
     this.props.history.goBack();
   };
 
   render() {
+    // Animation options
     const defaultOptions = {
       loop: true,
       autoplay: true,

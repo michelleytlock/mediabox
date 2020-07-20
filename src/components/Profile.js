@@ -25,27 +25,31 @@ class Profile extends Component {
   };
 
   componentDidMount() {
+    // Call to server to get most updated user list
     axios
       .get(`${config.API_URL}/userData`, { withCredentials: true })
       .then((res) => {
+        // Call to server to get list of genres from external API
         axios
           .get(`${config.API_URL}/getGenres`, { withCredentials: true })
           .then((genres) => {
-            //FILTER ONLY RATED MEDIAS
+            // Filter only rated medias
             let rated = res.data.list.filter((media) => {
               return media.listType === "rated";
             });
 
-            //FILTER BY MEDIA TYPE
+            // Filter by mediaType movie
             let movies = rated.filter((media) => {
               return media.mediaType === "movie";
             });
 
+            // Filter by mediaType tv
             let tvShows = rated.filter((media) => {
               return media.mediaType === "tv";
             });
 
-            //FIND MOST WATCHED MOVIE GENRES
+            // Find most watched movie genres
+            // Count genres and add to listOfMovieGenres with count
             let listOfMovieGenres = {};
             movies.forEach((movie) => {
               for (let i = 0; i < movie.mediaId.genres.length; i++) {
@@ -61,17 +65,21 @@ class Profile extends Component {
             for (let id in listOfMovieGenres) {
               movieGenresArr.push([id, listOfMovieGenres[id]]);
             }
+            // Sort by number count, highest to lowest
             movieGenresArr.sort((a, b) => {
               return b[1] - a[1];
             });
+            // Get top 3 genres
             let newMovieGenresArr = movieGenresArr.slice(0, 3).map((id) => {
               return Number(id[0]);
             });
 
+            // Get genre name from genre ids 
             let topMovieGenres = genres.data.movie.genres.filter((genre) => {
               return newMovieGenresArr.includes(genre.id);
             });
 
+            // Get total genres for chart
             let chartMovieGenres = genres.data.movie.genres.reduce(
               (filtered, elem) => {
                 for (let i = 0; i < movieGenresArr.length; i++) {
@@ -85,7 +93,8 @@ class Profile extends Component {
               []
             );
 
-            //FIND MOST WATCHED TV GENRES
+            // Find most watched tv genres
+            // Count genres and add to listOfTVGenres with count
             let listOfTVGenres = {};
             tvShows.forEach((tv) => {
               for (let i = 0; i < tv.mediaId.genres.length; i++) {
@@ -101,18 +110,19 @@ class Profile extends Component {
             for (let id in listOfTVGenres) {
               tvGenresArr.push([id, listOfTVGenres[id]]);
             }
+            // Sort by number count, highest to lowest
             tvGenresArr.sort((a, b) => {
               return b[1] - a[1];
             });
-
+            // Get top 3 genres
             let newTvGenresArr = tvGenresArr.slice(0, 3).map((id) => {
               return Number(id[0]);
             });
-
+            // Get genre name from genre ids
             let topTVGenres = genres.data.tv.genres.filter((genre) => {
               return newTvGenresArr.includes(genre.id);
             });
-
+            // Get total genres for chart
             let chartTVGenres = genres.data.tv.genres.reduce(
               (filtered, elem) => {
                 for (let i = 0; i < tvGenresArr.length; i++) {
@@ -125,12 +135,6 @@ class Profile extends Component {
               },
               []
             );
-
-            // console.log(genres.data.movie);
-            // console.log(newMovieGenresArr);
-            // console.log(topMovieGenres);
-            // console.log(topTVGenres);
-            // console.log(genres.data.movie.genres)
 
             this.setState(
               {
@@ -156,6 +160,7 @@ class Profile extends Component {
       });
   }
 
+  // This method toggles the mediaPage state to "movie"
   handleToggleMovie = () => {
     this.setState(
       {
@@ -167,6 +172,7 @@ class Profile extends Component {
     );
   };
 
+  // This method toggles the mediaPage state to "tv"
   handleToggleTV = () => {
     this.setState(
       {
@@ -178,12 +184,13 @@ class Profile extends Component {
     );
   };
 
+  // This method handles the sorting of rated medias between by alphabetical or by rating
   handleSort = (e) => {
-    console.log(e.target.value);
     if (e.target.value === "alpha") {
       let movies = this.state.ratedMovies;
       let tv = this.state.ratedTVShows;
 
+      // Sorted by alphabetical
       let alphaMovies = movies.sort((a, b) => {
         if (a.mediaId.title < b.mediaId.title) {
           return -1;
@@ -192,9 +199,6 @@ class Profile extends Component {
         }
         return 0;
       });
-
-      console.log(alphaMovies);
-
       let alphaTV = tv.sort((a, b) => {
         if (a.mediaId.title < b.mediaId.title) {
           return -1;
@@ -204,13 +208,12 @@ class Profile extends Component {
         return 0;
       });
 
-      console.log(alphaTV);
-
       this.setState({
         ratedMovies: alphaMovies,
         ratedTVShows: alphaTV,
       });
     } else {
+      // Sorted by rating
       let sortRatingMovies = this.state.ratedMovies.sort((a, b) => {
         return b.rating - a.rating;
       });
@@ -226,19 +229,21 @@ class Profile extends Component {
     }
   };
 
+  // This method handles uploading the user profile pic
   handleProfilePic = (e) => {
     e.preventDefault();
     let imageUrl = e.target.file.files[0];
-    console.log(imageUrl);
 
     let uploadData = new FormData();
     uploadData.append("imageUrl", imageUrl);
 
+    // Call to server to upload profile to Cloudinary
     axios
       .post(`${config.API_URL}/upload`, uploadData)
       .then((response) => {
         let profileImg = response.data.secure_url;
-        console.log(profileImg);
+
+        // Call to server to edit database and add profile to user
         axios
           .patch(
             `${config.API_URL}/editProfile`,
@@ -259,34 +264,40 @@ class Profile extends Component {
       });
   };
 
+  // This method handles logging out the user
   handleLogOut = () => {
+    // Call to server to destroy session
     axios
       .get(`${config.API_URL}/logout`)
       .then(() => {
-        this.props.history.push("/");
+        this.props.history.push("/"); // Redirect to landing page
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+  // This method handles the delete user modal pop up
   handleDeleteModal = () => {
     this.setState({
       showModal: !this.state.showModal,
     });
   };
 
+  // This method handles deleting the user from the database
   handleDeleteAccount = () => {
+    // Call to server to delete the user
     axios
       .delete(`${config.API_URL}/user`, { withCredentials: true })
       .then(() => {
-        this.props.history.push("/");
+        this.props.history.push("/"); // Redirect to landing page
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+  // This method toggles the full rated media list visibility
   handleList = () => {
     this.setState({
       listView: !this.state.listView,
@@ -300,13 +311,13 @@ class Profile extends Component {
       allMovieGenres,
       allTVGenres,
     } = this.state;
-
+    
     let ones = 0,
       twos = 0,
       threes = 0,
       fours = 0,
       fives = 0;
-
+    // Cound up the ratings 
     if (this.state.mediaPage === "movie") {
       for (let i = 0; i < ratedMovies.length; i++) {
         switch (ratedMovies[i].rating) {
@@ -355,6 +366,7 @@ class Profile extends Component {
       }
     }
 
+    // Rating bar chart:
     var ctx = document.getElementById("myChart");
     new Chart(ctx, {
       type: "bar",
@@ -414,10 +426,10 @@ class Profile extends Component {
       },
     });
 
+    //Genre pie chart:
     let genreLabels = [];
     let genreData = [];
 
-    // console.log(allMovieGenres)
     if (this.state.mediaPage === "movie") {
       genreLabels = allMovieGenres.map((elem) => {
         return elem[0];
@@ -478,7 +490,6 @@ class Profile extends Component {
   };
 
   render() {
-    // console.log(this.state.mediaPage);
     let date = new Date(this.props.loggedInUser.createdAt);
 
     const monthNames = [

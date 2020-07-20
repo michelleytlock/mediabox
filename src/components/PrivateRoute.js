@@ -4,29 +4,32 @@ import { withRouter } from "react-router-dom";
 import config from "../config";
 import axios from "axios";
 
+// Component for all private routes
 class PrivateRoute extends Component {
+
   state = {
     loggedInUser: '',
   };
 
   componentDidMount() {
-    //check if there is a logged in user
+    //Check if there is a logged in user from session
     if (!this.state.loggedInUser) {
       this.getUser();
     }
   }
 
+  // This method checks if there is a logged in user from the session
   getUser = () => {
     //get user from session from server
     axios
       .get(`${config.API_URL}/user`, { withCredentials: true })
       .then((res) => {
-        // console.log(res)
         if (res.data) {
           this.setState({
             loggedInUser: res.data,
           });
         } else {
+          // Redirect to log in form
           this.props.history.push("/login");
         }
       })
@@ -39,14 +42,10 @@ class PrivateRoute extends Component {
   };
 
   render() {
-
     let MyComponent = this.props.component
     if (!this.state.loggedInUser) {
       return null
-      //loading
     }
-    // console.log(this.state.loggedInUser)
-    // console.log(this.props.component)
     
     return (
       <Route

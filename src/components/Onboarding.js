@@ -6,7 +6,6 @@ import OnboardingRater from "./OnboardingRater";
 
 export default class Onboarding extends Component {
   render() {
-    console.log(this.props.ratedList);
     return (
       <>
         <h5 className="is-5 instructions">

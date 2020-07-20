@@ -7,12 +7,12 @@ import List from "./List";
 let photoPath = "https://image.tmdb.org/t/p/w500/";
 
 class PersonDetails extends Component {
+  // This method handles the back button
   handleBack = () => {
     this.props.history.goBack();
   };
 
   render() {
-    console.log(this.props);
     return (
       <>
         <div className="header">

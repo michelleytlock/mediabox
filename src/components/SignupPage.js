@@ -6,7 +6,6 @@ import { mdiCheck } from "@mdi/js";
 import { mdiAlertCircle } from "@mdi/js";
 
 export default function SignupPage(props) {
-  console.log('Signup, ', props.usernameStatus)
   return (
     <div className="signup-page">
       <button className="close-button">

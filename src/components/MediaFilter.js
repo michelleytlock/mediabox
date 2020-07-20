@@ -1,8 +1,6 @@
 import React from "react";
 
-export default function MediaFilter(props) {
-  console.log(props.mediaType)
-  
+export default function MediaFilter(props) {  
   return (
     <div className="media-filter">
       <button className="button is-white is-small" onClick={props.onMovieChange}>

@@ -150,6 +150,7 @@ class MediaDetails extends Component {
 
     const { cast, crew } = this.state.credits;
     
+    // Find director in crew data
     let director;
     if (crew) {
       director = crew.filter((crewMem) => {
@@ -157,8 +158,9 @@ class MediaDetails extends Component {
       });
     }
 
+    // If created_by is an array:
     let createdBy = Array.isArray(created_by) ? !!created_by.length : !!created_by
-    
+
     return (
       <div className="media-details-page">
         <div className="media-details-header">
